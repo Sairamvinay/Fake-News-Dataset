@@ -3,7 +3,7 @@ import pandas as pd
 TRAINFILEPATH = "../fake-news/train.csv"
 TESTFILEPATH = "../fake-news/test.csv"
 
-def read_files(PATH,nolabel = False):
+def read_files(PATH,nolabel = False, sample=None):
 	
 	names = []
 	if nolabel == True:
@@ -15,7 +15,10 @@ def read_files(PATH,nolabel = False):
 	df = pd.read_csv(PATH,sep = ",",names= names,header = 0)
 	df.dropna(how='any', inplace=True)
 	df.reset_index(drop=True, inplace=True)
-	return df
+	if sample is None:
+		return df
+	else:
+		return df.iloc[:sample]
 
 
 def main():
