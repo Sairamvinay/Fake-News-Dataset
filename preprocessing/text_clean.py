@@ -1,4 +1,4 @@
-import FileProcess as fp
+import fileprocess as fp
 import pandas as pd
 import spacy
 from string import digits
@@ -23,7 +23,7 @@ def remove_num(data):
     return data
 
 def main():
-    data = fp.read_files(fp.TRAINFILEPATH,nolabel = False, sample=100)
+    data = fp.read_files(fp.TRAINFILEPATH,nolabel = False)
     data = remove_stop(data)
     data = remove_num(data)
     filename = "train_clean.csv"
