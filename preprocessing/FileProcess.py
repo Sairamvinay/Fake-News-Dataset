@@ -16,7 +16,7 @@ def read_files(PATH,nolabel = False, sample=None):
 	df.dropna(how='any', inplace=True)
 	df.reset_index(drop=True, inplace=True)
 
-	df = df['text'].values.astype('U')
+	df["text"] = df['text'].values.astype('U')
 	
 	if sample is None:
 		return df
