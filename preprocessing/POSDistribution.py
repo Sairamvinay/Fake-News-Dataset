@@ -1,6 +1,6 @@
 import spacy
 from collections import defaultdict
-from FileProcess import read_files,TRAINFILEPATH
+from fileprocess import read_files,TRAINFILEPATH
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt

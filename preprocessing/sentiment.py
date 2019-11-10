@@ -1,4 +1,4 @@
-import FileProcess
+import fileprocess
 from textblob import TextBlob
 from matplotlib import pyplot as plt
 
@@ -23,7 +23,7 @@ def plt_polarity(dat, category):
 
 
 def main():
-    data = FileProcess.read_files(TRAINFILEPATH,nolabel = False)
+    data = fileprocess.read_files(TRAINFILEPATH,nolabel = False)
     data['polarity'] = data['text'].map(lambda x: TextBlob(x).sentiment.polarity)
     real = data.loc[data['label'] == 0] # select rows that are real news
     fake = data.loc[data['label'] == 1] # select rows that are real news
