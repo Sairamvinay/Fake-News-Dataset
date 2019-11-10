@@ -15,10 +15,13 @@ def read_files(PATH,nolabel = False, sample=None):
 	df = pd.read_csv(PATH,sep = ",",names= names,header = 0)
 	df.dropna(how='any', inplace=True)
 	df.reset_index(drop=True, inplace=True)
+
+	df = df['text'].values.astype('U')
+	
 	if sample is None:
 		return df
 	else:
-		return df.iloc[:sample]
+		return df.sample(n = sample,random_state = 999)
 
 
 def main():
