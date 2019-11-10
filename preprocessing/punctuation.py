@@ -3,7 +3,7 @@ import string
 import re
 import langid
 
-from preprocessing.FileProcess import read_files, TRAINFILEPATH, TESTFILEPATH
+from preprocessing.fileprocess import read_files, TRAINFILEPATH, TESTFILEPATH
 
 dfTrain = read_files(TRAINFILEPATH, nolabel=False)
 dfTest = read_files(TESTFILEPATH, nolabel=True)
