@@ -1,9 +1,9 @@
 import pandas as pd
 
-TRAINFILEPATH = "fake-news/train.csv"
-TESTFILEPATH = "fake-news/test.csv"
+TRAINFILEPATH = "../fake-news/train.csv"
+TESTFILEPATH = "../fake-news/test.csv"
 
-def read_files(PATH,nolabel = False):
+def read_files(PATH,nolabel = False, sample=None):
 	
 	names = []
 	if nolabel == True:
@@ -15,7 +15,13 @@ def read_files(PATH,nolabel = False):
 	df = pd.read_csv(PATH,sep = ",",names= names,header = 0)
 	df.dropna(how='any', inplace=True)
 	df.reset_index(drop=True, inplace=True)
-	return df
+
+	df["text"] = df['text'].values.astype('U')
+	
+	if sample is None:
+		return df
+	else:
+		return df.sample(n = sample,random_state = 999)
 
 
 def main():
