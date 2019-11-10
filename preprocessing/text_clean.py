@@ -28,11 +28,12 @@ def remove_num(data):
 def main():
     if sys.argv[1] == "test":
         data = fp.read_files(fp.TESTFILEPATH,nolabel = False)
+        filename = "test_clean.csv"
     else:
         data = fp.read_files(fp.TRAINFILEPATH,nolabel = False)
+        filename = "train_clean.csv"
     data = remove_stop(data)
     data = remove_num(data)
-    filename = "train_clean.csv"
     data.to_csv(filename, encoding='utf-8', index=False)
 
 
