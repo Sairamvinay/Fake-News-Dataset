@@ -2,7 +2,10 @@ import fileprocess as fp
 import pandas as pd
 import spacy
 from string import digits
+import sys
 
+# Usage: to clean train, do <python text_clean.py>
+# Usage: to clean test, do <python text_clean.py test>
 
 def remove_stop(data):
     spacy_nlp = spacy.load('en_core_web_sm')
@@ -23,7 +26,10 @@ def remove_num(data):
     return data
 
 def main():
-    data = fp.read_files(fp.TRAINFILEPATH,nolabel = False)
+    if sys.argv[1] == "test":
+        data = fp.read_files(fp.TESTFILEPATH,nolabel = False)
+    else:
+        data = fp.read_files(fp.TRAINFILEPATH,nolabel = False)
     data = remove_stop(data)
     data = remove_num(data)
     filename = "train_clean.csv"
