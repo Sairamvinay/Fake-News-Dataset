@@ -1,7 +1,7 @@
 import pandas as pd
 
-TRAINFILEPATH = "../fake-news/train.csv"
-TESTFILEPATH = "../fake-news/test.csv"
+TRAINFILEPATH = "../fake-news/train_clean.csv"
+TESTFILEPATH = "../fake-news/test_clean.csv"
 
 def read_files(PATH,nolabel = False, sample=None):
 	
