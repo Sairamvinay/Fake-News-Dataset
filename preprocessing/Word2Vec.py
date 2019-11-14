@@ -3,6 +3,10 @@ from gensim.models import Word2Vec
 from matplotlib import pyplot
 from sklearn.decomposition import PCA
 
+### TO USE:
+############ YOU NEED TO UNCOMMENT A LINE IN word2Vec TO CREATE A NEW MODEL
+############ YOU NEED TO UNCOMMENT THE CODE AT THE BOTTOM
+
 TRAINFILEPATH = "../fake-news/train_clean.csv"
 TESTFILEPATH = "../fake-news/test_clean.csv"
 
@@ -18,7 +22,7 @@ def word2Vec(text, data_file):
     return Word2Vec.load(save_file)
 ############### REMOVE TO CREATE A NEW MODEL ##################
     # train model
-    model = Word2Vec(text, min_count=1)
+    model = Word2Vec(text, min_count=10)
 
     # summarize vocabulary
     words = list(model.wv.vocab)
@@ -47,7 +51,7 @@ def read_files(PATH,nolabel = False, sample=None):
         names = ["id","title","author","text"]
 
     else:
-        		names = ["id","title","author","text","label"]
+        names = ["id","title","author","text","label"]
 
     df = pd.read_csv(PATH,sep = ",",names= names,header = 0)
     df.dropna(how='any', inplace=True)
