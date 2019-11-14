@@ -10,19 +10,22 @@ from sklearn.decomposition import PCA
 TRAINFILEPATH = "../fake-news/train_clean.csv"
 TESTFILEPATH = "../fake-news/test_clean.csv"
 
-def word2Vec(text, data_file):
-    if (data_file == "train"):
+def word2Vec(text, data_set):
+    if (data_set == "train"):
         save_file = 'train_word2vec_model.bin'
-    elif (data_file == "test"):
+    elif (data_set == "test"):
         save_file = 'test_word2vec_model.bin'
     else:
         print("ERROR: word2Vec did not accept args %s %s", text, data_file)
         return
 ############### REMOVE TO CREATE A NEW MODEL ##################
-    return Word2Vec.load(save_file)
+     return Word2Vec.load(save_file)
 ############### REMOVE TO CREATE A NEW MODEL ##################
     # train model
-    model = Word2Vec(text, min_count=10)
+    min_count = sum(len(words) for words in text) / len(text)
+
+    print(min_count)
+    model = Word2Vec(text, min_count=min_count, workers=10)
 
     # summarize vocabulary
     words = list(model.wv.vocab)
@@ -84,7 +87,7 @@ def main(argv):
     print(model)
     
 ''' UNCOMMET TO RUN '''
-# print("Training")
-# main("train")
-# print("\n\n\nTesting")
-# main("test")
+#print("Training")
+#main("train")
+#print("\n\n\nTesting")
+#main("test")
