@@ -16,24 +16,24 @@ def word2Vec(text, data_set):
     elif (data_set == "test"):
         save_file = 'test_word2vec_model.bin'
     else:
-        print("ERROR: word2Vec did not accept args %s %s", text, data_file)
+        print("ERROR: word2Vec did not accept args %s %s", text, data_set)
         return
 ############### REMOVE TO CREATE A NEW MODEL ##################
-     return Word2Vec.load(save_file)
+    return Word2Vec.load(save_file)
 ############### REMOVE TO CREATE A NEW MODEL ##################
-    # train model
-    min_count = sum(len(words) for words in text) / len(text)
+    # # train model
+    # min_count = sum(len(words) for words in text) / len(text)
 
-    print(min_count)
-    model = Word2Vec(text, min_count=min_count, workers=10)
+    # print(min_count)
+    # model = Word2Vec(text, min_count=min_count, workers=10)
 
-    # summarize vocabulary
-    words = list(model.wv.vocab)
+    # # summarize vocabulary
+    # words = list(model.wv.vocab)
 
-    # save model
-    model.save(save_file)
+    # # save model
+    # model.save(save_file)
     
-    return model
+    # return model
 
 def graph(model):
     X = model[model.wv.vocab]
@@ -85,7 +85,11 @@ def main(argv):
     text = [df["text"].values[i].split(" ") for i in range(lines_length)]
     model = word2Vec(text, argv)
     print(model)
-    
+
+
+if __name__ == "__main__":
+    main("train")
+
 ''' UNCOMMET TO RUN '''
 #print("Training")
 #main("train")
