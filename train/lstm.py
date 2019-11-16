@@ -7,6 +7,7 @@ from tensorflow.keras import optimizers
 from tensorflow.keras import Model
 from tensorflow import keras
 import sys
+import numpy as np
 
 # Usage: 
 # 1. python lstm.py cv
@@ -14,14 +15,10 @@ import sys
 # 3. python lstm.py word2vec
 
 
-def create_model(input_nodes):
-    # model = keras.Sequential()
-    # model.add(keras.layers.LSTM(1000, dropout=0.2, input_shape=(input_nodes,)))
-    # model.add(keras.layers.Dense(1, activation='softmax'))
-    input_layer = keras.layers.Input(shape=(input_nodes, ))
-    hidden1 = keras.layers.LSTM(1000, dropout=0.2)(input_layer)
-    final = keras.layers.Dense(1, activation='softmax')(hidden1)
-    model = Model(input_layer, final)
+def create_model(look_back, input_nodes):
+    model = keras.Sequential()
+    model.add(keras.layers.LSTM(1000, dropout=0.2, input_shape=(look_back, input_nodes)))
+    model.add(keras.layers.Dense(1, activation='softmax'))
     opt = optimizers.Adam(lr=0.01)
     model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
     return model
@@ -37,6 +34,8 @@ def main():
     Y_train = dfTrain['label'].to_numpy()
     X_test = dfTest['text'].to_numpy()
 
+
+
     if sys.argv[1] == "cv":
         X_train, X_test, _ = CV(X_train, X_test) # train shape: (17973, 141221)
     elif sys.argv[1] == 'tfidf':
@@ -47,11 +46,16 @@ def main():
         print("Error")
         return
 
+    # reshape input to be [samples, time steps, features]
+    look_back = 1
+    num_samples = X_train.shape[0]
+    num_features = X_train.shape[1]
+    X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
     # pad_sequences(X_train, maxlen=MAX_LENGTH)
     # pad_sequences(X_test, maxlen=MAX_LENGTH)
     epochs = 5
     batch_size = 128
-    model = create_model(X_train.shape[1])
+    model = create_model(look_back, num_features)
     model.fit(X_train, Y_train, epochs=epochs, batch_size=batch_size)
     
 
