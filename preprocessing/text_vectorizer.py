@@ -53,6 +53,9 @@ def word2vec(training_text, testing_text):
 def main():
     dfTrain = read_files(TRAINFILEPATH,nolabel = False)
     dfTest = read_files(TESTFILEPATH,nolabel = True)
+
+    Y_train = dfTrain["label"]
+    
     lines_length = len(dfTrain.values)
     lines_testlength = len(dfTest.values)
     training_text = [dfTrain["text"].values[i] for i in range(lines_length)]
