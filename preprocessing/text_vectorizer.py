@@ -58,11 +58,14 @@ def main():
     
     lines_length = len(dfTrain.values)
     lines_testlength = len(dfTest.values)
-    training_text = [dfTrain["text"].values[i] for i in range(lines_length)]
-    testing_text = [dfTest["text"].values[i] for i in range(lines_testlength)]
+    trainVal = dfTrain["text"].values
+    testVal = dfTest["text"].values
+    training_text = [trainVal[i] for i in range(lines_length)]
+    testing_text = [testVal[i] for i in range(lines_testlength)]
     X_train_TFIDF,X_test_TFIDF,_ = TFIDF(training_text,testing_text)
     X_train_CV,X_test_CV,_ = CV(training_text,testing_text)
-   
+    
+    
     print(X_train_TFIDF.shape," is the X_train shape")
     print(X_test_TFIDF.shape," is the X_test shape")
 
