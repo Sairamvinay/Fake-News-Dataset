@@ -2,6 +2,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import gensim
+from sklearn.ensemble import IsolationForest
+import itertools
+
 from time import time
 import numpy as np
 # '''
