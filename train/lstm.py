@@ -15,6 +15,16 @@ import numpy as np
 # 3. python lstm.py word2vec
 
 
+# 3 activations for hidden (btwn LSTM and final): RELU, linear, sigmoid
+# 2 optimizers: Adam, SGD
+#
+#
+# number of hidden layers: 0(default), 1, 2, 3
+# number of hidden neurons: 3, 6, 12
+
+# separate
+# number of memory cells: 200, 400, 600
+
 def create_model(look_back, input_nodes):
     model = keras.Sequential()
     model.add(keras.layers.LSTM(1000, dropout=0.2, input_shape=(look_back, input_nodes)))

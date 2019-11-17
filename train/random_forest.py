@@ -14,7 +14,11 @@ import sys
 # 2. python lstm.py tfidf
 # 3. python lstm.py word2vec
 
-
+# cross-validation 3
+# number of estimators: 200, 400, 800
+# max_depth: 1, 5, 9
+# min_samples_leaf: 2, 4
+# min_samples_split: 5, 10
 
 def evaluate(pred, truth):
     print('Mean Absolute Error:', metrics.mean_absolute_error(truth, pred))
@@ -38,22 +42,20 @@ def main():
         X, X_test, _ = TFIDF(X, X_test) # shape: (17973, 141221)
     elif sys.argv[1] == 'word2vec':
         X, X_test = word2vec(X, X_test)
-        # below padding is for LSTM
-        MAX_LENGTH = 250
-        X = pad_sequences(X, maxlen=MAX_LENGTH)
-        X_test = pad_sequences(X_test, maxlen=MAX_LENGTH)
     else:
         print("Error")
         return
 
-    kf = KFold(n_splits=5)
-    for train_index, dev_index in kf.split(X_train):
+    kf = KFold(n_splits=3)
+    for train_index, dev_index in kf.split(X):
         X_train, X_dev = X[train_index], X[dev_index]
         y_train, y_dev = Y[train_index], Y[dev_index]   
         model = RandomForestClassifier(n_estimators=20, random_state=0, n_jobs=-1)
         model.fit(X_train, y_train)
+        print('fit done')
         y_pred = model.predict(X_dev)
         evaluate(y_pred, y_dev)
+
 
 
 
