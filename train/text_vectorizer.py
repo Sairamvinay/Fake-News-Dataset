@@ -12,6 +12,7 @@ import numpy as np
 # Returns: 3 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
 # '''
 
+RNG = np.random.RandomState(42)
 MAX_FEATURES = 10000
 def CV(training_text,testing_text):
     cv = CountVectorizer(max_features = MAX_FEATURES)
