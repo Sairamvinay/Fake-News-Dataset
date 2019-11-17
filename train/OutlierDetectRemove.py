@@ -21,6 +21,16 @@ def graphOutliers(train,test,x = ["CV","TFIDF","W2V"]):
 	plt.legend()
 	plt.show()
 
+def removeOutliers(index,X,Y = None,Ftype = "CV train"):
+    X_removed = np.delete(X,index,axis = 0)
+    print(X_removed.shape," is shape of X after removing outliers")
+    if Y is None:
+        return X_removed
+
+    else:
+        Y_removed = np.delete(Y,index,axis = 0)
+        print(Y_removed.shape," is shape of Y after removing outlier")
+        return X_removed,Y_removed
 
 
 def main():
@@ -29,7 +39,7 @@ def main():
 
     dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
     dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
-    Y_train = dfTrain["label"]
+    Y_train = dfTrain["label"].to_numpy()
     
     lines_length = len(dfTrain.values)
     lines_testlength = len(dfTest.values)
@@ -44,16 +54,29 @@ def main():
     X_train_CV,X_test_CV,_ = CV(training_text,testing_text)
     X_train_WV,X_test_WV = word2vec(training_text,testing_text)
 
-    print(X_train_WV.shape, " is the X_train shape")
-    print(X_test_WV.shape, " is the X_test shape")
+    X_train_TFIDF = np.array(X_train_TFIDF)
+    X_test_TFIDF = np.array(X_test_TFIDF)
+
+    X_train_CV = np.array(X_train_CV)
+    X_test_CV = np.array(X_test_CV)
 
 
-    print(X_train_TFIDF.shape," is the X_train shape")
-    print(X_test_TFIDF.shape," is the X_test shape")
+    X_train_WV = np.array(X_train_WV)
+    X_test_WV = np.array(X_test_WV)
+
+    print("\nFor W2V\n")
+    print(X_train_WV.shape, " is before removal the X_train shape")
+    print(X_test_WV.shape, " is before removal the X_test shape")
+
+     print("\nFor TFIDF\n")
+    print(X_train_TFIDF.shape," is before removal the X_train shape")
+    print(X_test_TFIDF.shape," is before removal the X_test shape")
     
-
-    print(X_train_CV.shape," is the X_train shape")
-    print(X_test_CV.shape," is the X_test shape")
+    
+    
+    print("\nFor CV\n")
+    print(X_train_CV.shape," is before removal the X_train shape")
+    print(X_test_CV.shape," is before removal the X_test shape")
     
 
     result1,perCVtrain = outlierDection(X_train_CV,"CV train")
@@ -66,6 +89,18 @@ def main():
     trainOutliers = [perCVtrain,perTFIDFtrain,perWVtrain]
     testOutliers = [perCVtest,perTFIDFtest,perWVtest]
     graphOutliers(trainOutliers,testOutliers)
+    
+    
+    X_train_CV,Y_train_CV = removeOutliers(index = result1,X = X_train_CV,Y = Y_train,Ftype = "CV train")
+    X_test_CV = removeOutliers(index = result2,X = X_test_CV,Y = None,Ftype = "CV test")
+
+
+    X_train_TFIDF,Y_train_TFIDF = removeOutliers(index = result3,X = X_train_TFIDF,Y = Y_train,Ftype = "TFIDF train")
+    X_test_TFIDF = removeOutliers(index = result4,X = X_test_TFIDF,Y = None,Ftype = "TFIDF test")
+
+    X_train_WV,Y_train_WV = removeOutliers(index = result5,X = X_train_WV,Y = Y_train,Ftype = "W2V train")
+    X_test_WV = removeOutliers(index = result6,X = X_test_WV,Y = None,Ftype = "W2V test")
+
 
     
 
