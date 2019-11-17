@@ -1,6 +1,9 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import gensim
+from sklearn.ensemble import IsolationForest
+import numpy as np
+import itertools
 
 from fileprocess import read_files,TRAINFILEPATH,TESTFILEPATH
 # '''
@@ -65,13 +68,50 @@ def main():
     X_train_TFIDF,X_test_TFIDF,_ = TFIDF(training_text,testing_text)
     X_train_CV,X_test_CV,_ = CV(training_text,testing_text)
     
-    
     print(X_train_TFIDF.shape," is the X_train shape")
+    print(X_train_TFIDF)
     print(X_test_TFIDF.shape," is the X_test shape")
+    print(X_test_TFIDF)
 
     print(X_train_CV.shape," is the X_train shape")
+    print(X_train_CV)
     print(X_test_CV.shape," is the X_test shape")
+    print(X_test_CV)
 
+    rng = np.random.RandomState(42)
+    clf_Iso = IsolationForest(max_samples='auto',random_state=rng, contamination='auto', behaviour='new')
+    
+    clf_Iso.fit(X_train_CV)
+    y_CV_Iso_Forest = clf_Iso.predict(X_train_CV)
+    result_CV = np.where(y_CV_Iso_Forest == -1)
+    result_CV = list(itertools.chain.from_iterable(result_CV))
+    print(np.shape(result_CV))
+    print(np.shape(y_CV_Iso_Forest))
+    print("the percentage of outliers in CV train is", np.shape(result_CV)[0]/np.shape(y_CV_Iso_Forest)[0])
+
+    clf_Iso.fit(X_test_CV)
+    y_test_CV_Iso_Forest = clf_Iso.predict(X_test_CV)
+    result_test_CV = np.where(y_test_CV_Iso_Forest == -1)
+    result_test_CV = list(itertools.chain.from_iterable(result_test_CV))
+    print(np.shape(result_test_CV))
+    print(np.shape(y_test_CV_Iso_Forest))
+    print("the percentage of outliers in CV test is", np.shape(result_test_CV)[0]/np.shape(y_test_CV_Iso_Forest)[0])
+    
+    clf_Iso.fit(X_train_TFIDF)
+    y_TFIDF_Iso_Forest = clf_Iso.predict(X_train_TFIDF)
+    result_TFIDF = np.where(y_TFIDF_Iso_Forest == -1)
+    result_TFIDF = list(itertools.chain.from_iterable(result_TFIDF))
+    print(np.shape(result_TFIDF))
+    print(np.shape(y_TFIDF_Iso_Forest))
+    print("the percentage of outliers in TFIDF train is", np.shape(result_TFIDF)[0]/np.shape(y_TFIDF_Iso_Forest)[0])
+
+    clf_Iso.fit(X_test_TFIDF)
+    y_test_TFIDF_Iso_Forest = clf_Iso.predict(X_test_TFIDF)
+    result_test_TFIDF = np.where(y_test_TFIDF_Iso_Forest == -1)
+    result_test_TFIDF = list(itertools.chain.from_iterable(result_test_TFIDF))
+    print(np.shape(result_test_TFIDF))
+    print(np.shape(y_test_TFIDF_Iso_Forest))
+    print("the percentage of outliers in TFIDF test is", np.shape(result_test_TFIDF)[0]/np.shape(y_test_TFIDF_Iso_Forest)[0])
 
 
 if __name__ == '__main__':
