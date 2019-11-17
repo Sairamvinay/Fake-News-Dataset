@@ -9,6 +9,8 @@ import itertools
 from fileprocess import read_files,TRAINFILEPATH,TESTFILEPATH
 from time import time
 import numpy as np
+
+
 # '''
 # Parameters: 2 arrays of strings which contain the text of each article within the dataset for train and test
 # Returns: 3 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
@@ -43,14 +45,17 @@ def TFIDF(training_text,testing_text):
 
     return X_train,X_test,words
 
-
+_vectorLookup = {}
 def getVector(model,tokens,size = 100):
+    if model not in _vectorLookup:
+        _vectorLookup[model] = {}
     vec = np.zeros(size)
     count = 0
     for word in tokens:
         try:
-
-            vec += model[word]
+            if word not in _vectorLookup[model]:
+                _vectorLookup[model][word] = model[word]
+            vec += _vectorLookup[model][word]
             count += 1.0
 
         except KeyError:
@@ -60,7 +65,6 @@ def getVector(model,tokens,size = 100):
         vec = vec / count
 
     return vec
-
 
 def word2vec(training_text, testing_text):
     modelTrain = gensim.models.KeyedVectors.load(
@@ -143,6 +147,22 @@ def main():
     print(np.shape(result_test_TFIDF))
     print(np.shape(y_test_TFIDF_Iso_Forest))
     print("the percentage of outliers in TFIDF test is", np.shape(result_test_TFIDF)[0]/np.shape(y_test_TFIDF_Iso_Forest)[0])
+
+    clf_Iso.fit(X_train_WV)
+    y_WV_Iso_Forest = clf_Iso.predict(X_train_WV)
+    result_WV = np.where(y_WV_Iso_Forest == -1)
+    result_WV = list(itertools.chain.from_iterable(result_WV))
+    print(np.shape(result_WV))
+    print(np.shape(y_WV_Iso_Forest))
+    print("the percentage of outliers in WV train is", np.shape(result_WV)[0]/np.shape(y_WV_Iso_Forest)[0])
+    
+    clf_Iso.fit(X_test_WV)
+    y_test_WV_Iso_Forest = clf_Iso.predict(X_test_WV)
+    result_test_WV = np.where(y_test_WV_Iso_Forest == -1)
+    result_test_WV = list(itertools.chain.from_iterable(result_test_WV))
+    print(np.shape(result_test_WV))
+    print(np.shape(y_test_WV_Iso_Forest))
+    print("the percentage of outliers in WV test is", np.shape(result_test_WV)[0]/np.shape(y_test_WV_Iso_Forest)[0])
 
     end = time()
     taken = (end - start) / 60.00
