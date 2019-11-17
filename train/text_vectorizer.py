@@ -1,7 +1,8 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import gensim
-
+from time import time
+import numpy as np
 # '''
 # Parameters: 2 arrays of strings which contain the text of each article within the dataset for train and test
 # Returns: 3 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
@@ -37,16 +38,42 @@ def TFIDF(training_text,testing_text):
     return X_train,X_test,words
 
 
+def getVector(model,tokens,size = 100):
+    vec = np.zeros(size)
+    count = 0
+    for word in tokens:
+        try:
 
-def word2vec(training_text, testing_text):
-    # First download Google's word embeddings
-    # Then load the pre-trained model
-    model = gensim.models.Word2Vec.load_word2vec_format(
-        "GoogleNews-vectors-negative300.bin",
-        binary = True
-    )
+            vec += model[word]
+            count += 1.0
 
-    X_train = [model[word] for word in training_text]
-    X_test = [model[word] for word in testing_text]
+        except KeyError:
+            continue
 
-    return X_train, X_test
+    if count != 0:
+        vec = vec / count
+
+    return vec
+
+
+def word2vec(training_text, testing_text, lstm=False):
+    modelTrain = gensim.models.KeyedVectors.load(
+            "../fake-news/train_word2vec_model.bin")
+
+    modelTest = gensim.models.KeyedVectors.load("../fake-news/test_word2vec_model.bin")
+    
+    if lstm is True:
+        # todo:
+        X_train = [modelTrain[word] for word in training_text]
+        X_test = [modelTest[word] for word in testing_text]
+    else:
+        X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
+        X_test =  [getVector(modelTest,sent.split(' ')) for sent in testing_text]
+
+    return np.array(X_train), np.array(X_test)
+
+
+
+
+
+
