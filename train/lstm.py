@@ -38,16 +38,20 @@ def main():
 
     if sys.argv[1] == "cv":
         X_train, X_test, _ = CV(X_train, X_test) # train shape: (17973, 141221)
+        look_back = 1
     elif sys.argv[1] == 'tfidf':
         X_train, X_test, _ = TFIDF(X_train, X_test) # shape: (17973, 141221)
+        look_back = 1
     elif sys.argv[1] == 'word2vec':
         X_train, X_test = word2vec(X_train, X_test)
+        look_back = 250
+        X_train = pad_sequences(X_train, maxlen=MAX_LENGTH)
+        X_test = pad_sequences(X_test, maxlen=MAX_LENGTH)
     else:
         print("Error")
         return
 
     # reshape input to be [samples, time steps, features]
-    look_back = 1
     num_samples = X_train.shape[0]
     num_features = X_train.shape[1]
     X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
