@@ -4,19 +4,19 @@ import gensim
 from sklearn.ensemble import IsolationForest
 import numpy as np
 import itertools
-
-
 from fileprocess import read_files,TRAINFILEPATH,TESTFILEPATH
 from time import time
 import numpy as np
 
+MAX_FEATURES = 10000
+RNG = np.random.RandomState(42)
 
 # '''
 # Parameters: 2 arrays of strings which contain the text of each article within the dataset for train and test
 # Returns: 3 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
 # '''
 def CV(training_text,testing_text):
-    cv = CountVectorizer()
+    cv = CountVectorizer(max_features = MAX_FEATURES)
     cv.fit(training_text)
 
     X_train = cv.transform(training_text)
@@ -25,6 +25,7 @@ def CV(training_text,testing_text):
 
     X_train = X_train.todense()
     X_test = X_test.todense()
+
     return X_train,X_test,words
 
 # '''
@@ -33,7 +34,7 @@ def CV(training_text,testing_text):
 # '''
 
 def TFIDF(training_text,testing_text):
-    tfidf = TfidfVectorizer()
+    tfidf = TfidfVectorizer(max_features = MAX_FEATURES)
     tfidf.fit(training_text)
     
     X_train = tfidf.transform(training_text)
@@ -77,102 +78,22 @@ def word2vec(training_text, testing_text):
     return np.array(X_train), np.array(X_test)
 
 
-def main():
+def outlierDection(Features,Ftype):
 
-    start = time()
-    dfTrain = read_files(TRAINFILEPATH,nolabel = False)
-    dfTest = read_files(TESTFILEPATH,nolabel = True)
-
-    Y_train = dfTrain["label"]
-    
-    lines_length = len(dfTrain.values)
-    lines_testlength = len(dfTest.values)
-    
-    trainVal = dfTrain["text"].values
-    testVal = dfTest["text"].values
-    
-    training_text = [trainVal[i] for i in range(lines_length)]
-    testing_text = [testVal[i] for i in range(lines_testlength)]
-    
-    X_train_TFIDF,X_test_TFIDF,_ = TFIDF(training_text,testing_text)
-    X_train_CV,X_test_CV,_ = CV(training_text,testing_text)
-
-    X_train_WV,X_test_WV = word2vec(training_text,testing_text)
-
-    print(X_train_WV.shape, " is the X_train shape")
-    print(X_test_WV.shape, " is the X_test shape")
-
-
-    print(X_train_TFIDF.shape," is the X_train shape")
-    print(X_train_TFIDF)
-    print(X_test_TFIDF.shape," is the X_test shape")
-    print(X_test_TFIDF)
-
-    print(X_train_CV.shape," is the X_train shape")
-    print(X_train_CV)
-    print(X_test_CV.shape," is the X_test shape")
-    print(X_test_CV)
-
-    rng = np.random.RandomState(42)
-    clf_Iso = IsolationForest(max_samples='auto',random_state=rng, contamination='auto', behaviour='new')
-    
-    clf_Iso.fit(X_train_CV)
-    y_CV_Iso_Forest = clf_Iso.predict(X_train_CV)
-    result_CV = np.where(y_CV_Iso_Forest == -1)
-    result_CV = list(itertools.chain.from_iterable(result_CV))
-    print(np.shape(result_CV))
-    print(np.shape(y_CV_Iso_Forest))
-    print("the percentage of outliers in CV train is", np.shape(result_CV)[0]/np.shape(y_CV_Iso_Forest)[0])
-
-    clf_Iso.fit(X_test_CV)
-    y_test_CV_Iso_Forest = clf_Iso.predict(X_test_CV)
-    result_test_CV = np.where(y_test_CV_Iso_Forest == -1)
-    result_test_CV = list(itertools.chain.from_iterable(result_test_CV))
-    print(np.shape(result_test_CV))
-    print(np.shape(y_test_CV_Iso_Forest))
-    print("the percentage of outliers in CV test is", np.shape(result_test_CV)[0]/np.shape(y_test_CV_Iso_Forest)[0])
-    
-    clf_Iso.fit(X_train_TFIDF)
-    y_TFIDF_Iso_Forest = clf_Iso.predict(X_train_TFIDF)
-    result_TFIDF = np.where(y_TFIDF_Iso_Forest == -1)
-    result_TFIDF = list(itertools.chain.from_iterable(result_TFIDF))
-    print(np.shape(result_TFIDF))
-    print(np.shape(y_TFIDF_Iso_Forest))
-    print("the percentage of outliers in TFIDF train is", np.shape(result_TFIDF)[0]/np.shape(y_TFIDF_Iso_Forest)[0])
-
-    clf_Iso.fit(X_test_TFIDF)
-    y_test_TFIDF_Iso_Forest = clf_Iso.predict(X_test_TFIDF)
-    result_test_TFIDF = np.where(y_test_TFIDF_Iso_Forest == -1)
-    result_test_TFIDF = list(itertools.chain.from_iterable(result_test_TFIDF))
-    print(np.shape(result_test_TFIDF))
-    print(np.shape(y_test_TFIDF_Iso_Forest))
-    print("the percentage of outliers in TFIDF test is", np.shape(result_test_TFIDF)[0]/np.shape(y_test_TFIDF_Iso_Forest)[0])
-
-    clf_Iso.fit(X_train_WV)
-    y_WV_Iso_Forest = clf_Iso.predict(X_train_WV)
-    result_WV = np.where(y_WV_Iso_Forest == -1)
-    result_WV = list(itertools.chain.from_iterable(result_WV))
-    print(np.shape(result_WV))
-    print(np.shape(y_WV_Iso_Forest))
-    print("the percentage of outliers in WV train is", np.shape(result_WV)[0]/np.shape(y_WV_Iso_Forest)[0])
-    
-    clf_Iso.fit(X_test_WV)
-    y_test_WV_Iso_Forest = clf_Iso.predict(X_test_WV)
-    result_test_WV = np.where(y_test_WV_Iso_Forest == -1)
-    result_test_WV = list(itertools.chain.from_iterable(result_test_WV))
-    print(np.shape(result_test_WV))
-    print(np.shape(y_test_WV_Iso_Forest))
-    print("the percentage of outliers in WV test is", np.shape(result_test_WV)[0]/np.shape(y_test_WV_Iso_Forest)[0])
-
-    end = time()
-    taken = (end - start) / 60.00
-    print("Time taken :%f minutes"%taken)
+    clf_Iso = IsolationForest(random_state=RNG,n_jobs = -1)
+    clf_Iso.fit(Features)
+    y_Iso_Forest = clf_Iso.predict(Features)
+    result = np.where(y_Iso_Forest == -1)
+    result = list(itertools.chain.from_iterable(result))
+    print(np.shape(result))
+    print(np.shape(y_Iso_Forest))
+    percentOutlier = 100.00 *  np.shape(result)[0]/np.shape(y_Iso_Forest)[0]
+    print("the percentage of outliers in ",Ftype," is: ",percentOutlier,"%")
+    return result,percentOutlier
 
 
 
-if __name__ == '__main__':
 
-    main()
 
 
 
