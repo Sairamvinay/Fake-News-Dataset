@@ -6,6 +6,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras import optimizers
 from tensorflow.keras import Model
 from tensorflow import keras
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import GridSearchCV
 import sys
 import numpy as np
 
@@ -25,6 +27,21 @@ import numpy as np
 # separate
 # number of memory cells: 200, 400, 600
 
+
+# for grid search
+def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='adam', hidden_layers=0, neurons=3):
+    model = keras.Sequential()
+    model.add(keras.layers.LSTM(1000, dropout=0.2, input_shape=(look_back, input_nodes)))
+    
+    for i in range(hidden_layers):
+        model.add(keras.layers.Dense(neurons, activation=activation))
+
+    model.add(keras.layers.Dense(1, activation='softmax'))
+    model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    return model
+
+
+# for model after doing the grid search
 def create_model(look_back, input_nodes):
     model = keras.Sequential()
     model.add(keras.layers.LSTM(1000, dropout=0.2, input_shape=(look_back, input_nodes)))
@@ -65,12 +82,30 @@ def main():
     num_samples = X_train.shape[0]
     num_features = X_train.shape[1]
     X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
-    # pad_sequences(X_train, maxlen=MAX_LENGTH)
-    # pad_sequences(X_test, maxlen=MAX_LENGTH)
-    epochs = 5
+
+    epochs = 2
     batch_size = 128
-    model = create_model(look_back, num_features)
-    model.fit(X_train, Y_train, epochs=epochs, batch_size=batch_size)
+
+    # model = create_model(look_back, num_features)
+    # model.fit(X_train, Y_train, epochs=epochs, batch_size=batch_size)
+
+    model = KerasClassifier(build_fn=grid_model, look_back=look_back, 
+                input_nodes=num_features, epochs=epochs, 
+                batch_size=batch_size, verbose=0)
+    activation = ['relu', 'linear', 'sigmoid']
+    optimizer = ['Adam', 'SGD']
+    hidden_layers = [1, 2, 3]
+    neurons = [3, 6, 12]
+    param_grid = dict(activation=activation, optimizer=optimizer, 
+                    hidden_layers=hidden_layers, neurons=neurons)
+
+    grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
+    grid_result = grid.fit(X_train, Y_train)
+    means = grid_result.cv_results_['mean_test_score']
+    stds = grid_result.cv_results_['std_test_score']
+    params = grid_result.cv_results_['params']
+    for mean, stdev, param in zip(means, stds, params):
+        print("%f (%f) with: %r" % (mean, stdev, param))    
     
 
 
