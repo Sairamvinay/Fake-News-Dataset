@@ -1,5 +1,5 @@
 import numpy as np
-from fileprocess import read_files,TRAINFILEPATH,TESTFILEPATH
+import readdata
 from time import time
 import numpy as np
 from text_vectorizer import outlierDection,word2vec,TFIDF,CV
@@ -23,14 +23,12 @@ def graphOutliers(train,test,x = ["CV","TFIDF","W2V"]):
 
 
 
-
-
 def main():
 
     start = time()
-    dfTrain = read_files(TRAINFILEPATH,nolabel = False)
-    dfTest = read_files(TESTFILEPATH,nolabel = True)
 
+    dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
+    dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
     Y_train = dfTrain["label"]
     
     lines_length = len(dfTrain.values)
@@ -69,6 +67,7 @@ def main():
     testOutliers = [perCVtest,perTFIDFtest,perWVtest]
     graphOutliers(trainOutliers,testOutliers)
 
+    
 
     end = time()
     taken = (end - start) / 60.00
