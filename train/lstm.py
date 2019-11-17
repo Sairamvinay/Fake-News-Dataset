@@ -51,6 +51,20 @@ def create_model(look_back, input_nodes):
     return model
 
 
+def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
+
+    X = np.array(X)
+    index,_ = outlierDection(X,Ftype)
+    if not isTest:
+        Y = np.array(Y)
+        Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
+        return Xrem,Yrem
+
+    else:
+        Xrem = removeOutliers(index,X,Y,Ftype)
+        return Xrem
+
+
 def main():
     # Max number of words in each X vector
     MAX_LENGTH = 250
@@ -65,12 +79,20 @@ def main():
 
     if sys.argv[1] == "cv":
         X_train, X_test, _ = CV(X_train, X_test) # train shape: (17973, 141221)
+        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
+        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
         look_back = 1
+
     elif sys.argv[1] == 'tfidf':
         X_train, X_test, _ = TFIDF(X_train, X_test) # shape: (17973, 141221)
+        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
+        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
         look_back = 1
+
     elif sys.argv[1] == 'word2vec':
         X_train, X_test = word2vec(X_train, X_test)
+        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
+        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
         look_back = 250
         # X_train = pad_sequences(X_train, maxlen=MAX_LENGTH)
         # X_test = pad_sequences(X_test, maxlen=MAX_LENGTH)

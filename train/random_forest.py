@@ -20,6 +20,20 @@ import sys
 # min_samples_leaf: 2, 4
 # min_samples_split: 5, 10
 
+def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
+
+    X = np.array(X)
+    index,_ = outlierDection(X,Ftype)
+    if not isTest:
+        Y = np.array(Y)
+        Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
+        return Xrem,Yrem
+
+    else:
+        Xrem = removeOutliers(index,X,Y,Ftype)
+        return Xrem
+
+
 def evaluate(pred, truth):
     print('Mean Absolute Error:', metrics.mean_absolute_error(truth, pred))
     print('Mean Squared Error:', metrics.mean_squared_error(truth, pred))
@@ -38,10 +52,21 @@ def main():
 
     if sys.argv[1] == "cv":
         X_train, X_test, _ = CV(X_train, X_test) # train shape: (17973, 141221)
+        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
+        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
+
+
     elif sys.argv[1] == 'tfidf':
         X_train, X_test, _ = TFIDF(X_train, X_test) # shape: (17973, 141221)
+        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
+        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
+
+
     elif sys.argv[1] == 'word2vec':
         X_train, X_test = word2vec(X_train, X_test)
+        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
+        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
+        
     else:
         print("Error")
         return
