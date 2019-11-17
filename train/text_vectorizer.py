@@ -1,7 +1,9 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import gensim
-
+from fileprocess import read_files,TRAINFILEPATH,TESTFILEPATH
+from time import time
+import numpy as np
 # '''
 # Parameters: 2 arrays of strings which contain the text of each article within the dataset for train and test
 # Returns: 3 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
@@ -37,16 +39,77 @@ def TFIDF(training_text,testing_text):
     return X_train,X_test,words
 
 
+def getVector(model,tokens,size = 100):
+    vec = np.zeros(size)
+    count = 0
+    for word in tokens:
+        try:
+
+            vec += model[word]
+            count += 1.0
+
+        except KeyError:
+            continue
+
+    if count != 0:
+        vec = vec / count
+
+    return vec
+
 
 def word2vec(training_text, testing_text):
-    # First download Google's word embeddings
-    # Then load the pre-trained model
-    model = gensim.models.Word2Vec.load_word2vec_format(
-        "GoogleNews-vectors-negative300.bin",
-        binary = True
-    )
+    modelTrain = gensim.models.KeyedVectors.load(
+            "../fake-news/train_word2vec_model.bin")
 
-    X_train = [model[word] for word in training_text]
-    X_test = [model[word] for word in testing_text]
+    modelTest = gensim.models.KeyedVectors.load("../fake-news/test_word2vec_model.bin")
+    
+    X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
+    X_test =  [getVector(modelTest,sent.split(' ')) for sent in testing_text]
+    return np.array(X_train), np.array(X_test)
 
-    return X_train, X_test
+
+def main():
+
+    start = time()
+    dfTrain = read_files(TRAINFILEPATH,nolabel = False)
+    dfTest = read_files(TESTFILEPATH,nolabel = True)
+
+    Y_train = dfTrain["label"]
+    
+    lines_length = len(dfTrain.values)
+    lines_testlength = len(dfTest.values)
+    
+    trainVal = dfTrain["text"].values
+    testVal = dfTest["text"].values
+    
+    training_text = [trainVal[i] for i in range(lines_length)]
+    testing_text = [testVal[i] for i in range(lines_testlength)]
+    
+    X_train_TFIDF,X_test_TFIDF,_ = TFIDF(training_text,testing_text)
+    X_train_CV,X_test_CV,_ = CV(training_text,testing_text)
+    X_train_WV,X_test_WV = word2vec(training_text,testing_text)
+
+    print(X_train_WV.shape, " is the X_train shape")
+    print(X_test_WV.shape, " is the X_test shape")
+
+    print(X_train_TFIDF.shape," is the X_train shape")
+    print(X_test_TFIDF.shape," is the X_test shape")
+
+    print(X_train_CV.shape," is the X_train shape")
+    print(X_test_CV.shape," is the X_test shape")
+
+    end = time()
+    taken = (end - start) / 60.00
+    print("Time taken :%f minutes"%taken)
+
+
+if __name__ == '__main__':
+
+    main()
+
+
+
+
+
+
+

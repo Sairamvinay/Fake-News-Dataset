@@ -38,6 +38,7 @@ def main():
         X, X_test, _ = TFIDF(X, X_test) # shape: (17973, 141221)
     elif sys.argv[1] == 'word2vec':
         X, X_test = word2vec(X, X_test)
+        # below padding is for LSTM
         MAX_LENGTH = 250
         X = pad_sequences(X, maxlen=MAX_LENGTH)
         X_test = pad_sequences(X_test, maxlen=MAX_LENGTH)
