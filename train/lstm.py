@@ -72,8 +72,8 @@ def main():
     elif sys.argv[1] == 'word2vec':
         X_train, X_test = word2vec(X_train, X_test)
         look_back = 250
-        X_train = pad_sequences(X_train, maxlen=MAX_LENGTH)
-        X_test = pad_sequences(X_test, maxlen=MAX_LENGTH)
+        # X_train = pad_sequences(X_train, maxlen=MAX_LENGTH)
+        # X_test = pad_sequences(X_test, maxlen=MAX_LENGTH)
     else:
         print("Error")
         return

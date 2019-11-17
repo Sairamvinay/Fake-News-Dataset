@@ -1,5 +1,6 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 import gensim
 from time import time
 import numpy as np
@@ -63,14 +64,21 @@ def word2vec(training_text, testing_text, lstm=False):
     modelTest = gensim.models.KeyedVectors.load("../fake-news/test_word2vec_model.bin")
     
     if lstm is True:
-        # todo:
-        X_train = [modelTrain[word] for word in training_text]
-        X_test = [modelTest[word] for word in testing_text]
+        X_train = []
+        X_test = []
+        for sentence_train, sentence_test in zip(X_train, X_test):
+            temp = [modelTrain[word] for word in sentence_train]
+            X_train.append(temp)
+            temp = [modelTest[word] for word in sentence_test]
+            X_test.append(temp)
+            MAX_LENGTH = 250
+            X_train = pad_sequences(X_train, maxlen=MAX_LENGTH)
+            X_test = pad_sequences(X_test, maxlen=MAX_LENGTH)
+            return X_train, X_test
     else:
         X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
         X_test =  [getVector(modelTest,sent.split(' ')) for sent in testing_text]
-
-    return np.array(X_train), np.array(X_test)
+        return np.array(X_train), np.array(X_test)
 
 
 
