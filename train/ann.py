@@ -85,7 +85,7 @@ def main():
 	num_features = X_train.shape[1]
 
 	epochs = 100
-	batch_size = 256
+	batch_size = 128
 
 	model = KerasClassifier(build_fn=ANN,
 	            input_dim = num_features, epochs = epochs, 
