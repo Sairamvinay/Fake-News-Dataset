@@ -1,0 +1,17 @@
+(1798,)
+(17973,)
+the percentage of outliers in  W2V_Train  is:  10.003894730985367 %
+(16175, 100)  is shape of X for  W2V_Train after removing outliers
+(16175,)  is shape of Y for  W2V_Train  after removing outlier
+(450,)
+(4494,)
+the percentage of outliers in  W2V_Test  is:  10.013351134846461 %
+(4044, 100)  is shape of X for  W2V_Test after removing outliers
+Performing Grid Search on SVM...
+Fitting 3 folds for each of 6 candidates, totalling 18 fits
+0.909366 (0.004026) with: {'kernel': 'linear', 'C': 0.25}
+0.891437 (0.001813) with: {'kernel': 'rbf', 'C': 0.25}
+0.910232 (0.003417) with: {'kernel': 'linear', 'C': 0.5}
+0.900031 (0.002812) with: {'kernel': 'rbf', 'C': 0.5}
+0.911654 (0.004183) with: {'kernel': 'linear', 'C': 0.75}
+0.904606 (0.002276) with: {'kernel': 'rbf', 'C': 0.75}
