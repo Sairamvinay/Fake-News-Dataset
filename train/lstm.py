@@ -2,12 +2,14 @@ import readdata
 from text_vectorizer import CV
 from text_vectorizer import TFIDF
 from text_vectorizer import word2vec
+from text_vectorizer import outlierDection
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras import optimizers
 from tensorflow.keras import Model
 from tensorflow import keras
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
+from OutlierDetectRemove import removeOutliers
 import sys
 import numpy as np
 
@@ -78,13 +80,13 @@ def main():
 
 
     if sys.argv[1] == "cv":
-        X_train, X_test, _ = CV(X_train, X_test) # train shape: (17973, 141221)
+        X_train, X_test, _ = CV(X_train, X_test) # train shape: (17973, 10000)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
         X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
         look_back = 1
 
     elif sys.argv[1] == 'tfidf':
-        X_train, X_test, _ = TFIDF(X_train, X_test) # shape: (17973, 141221)
+        X_train, X_test, _ = TFIDF(X_train, X_test) # shape: (17973, 10000)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
         X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
         look_back = 1
