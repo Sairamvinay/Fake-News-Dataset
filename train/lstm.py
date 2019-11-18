@@ -14,26 +14,40 @@ import sys
 import numpy as np
 
 # Usage: 
-# 1. python lstm.py cv
-# 2. python lstm.py tfidf
-# 3. python lstm.py word2vec
+# python lstm.py <model> <grid-search step>
+# <model> can be: cv, tfidf, or word2vec
+# <grid-search step> can be: 1, 2, 3, 4
+
+# For the first grid search step, do:
+# 1. python lstm.py cv 1 
+# 2. python lstm.py tfidf 1
+# 3. python lstm.py word2vec 1
 
 
 # 3 activations for hidden (btwn LSTM and final): RELU, linear, sigmoid
+# 
 # 2 optimizers: Adam, SGD
 #
+# number of hidden layers: 1, 2, 3
 #
-# number of hidden layers: 0(default), 1, 2, 3
 # number of hidden neurons: 3, 6, 12
 
-# separate
 # number of memory cells: 200, 400, 600
 
 
+# Grid search steps:
+# 1. search the best activations, using 1 layer, 3 neurons, 600 cells, Adam
+# 2. search the best optimizer, with the best activations found in step 1,
+#    and other hyper-para as step 1
+# 3. search the best hidden layer and hidden neurons
+# 4. search the best memory cells
+
+
+
 # for grid search
-def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='adam', hidden_layers=0, neurons=3):
+def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='adam', hidden_layers=, neurons=3):
     model = keras.Sequential()
-    model.add(keras.layers.LSTM(1000, dropout=0.2, input_shape=(look_back, input_nodes)))
+    model.add(keras.layers.LSTM(600, dropout=0.2, input_shape=(look_back, input_nodes)))
     
     for i in range(hidden_layers):
         model.add(keras.layers.Dense(neurons, activation=activation))
@@ -41,6 +55,7 @@ def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='a
     model.add(keras.layers.Dense(1, activation='softmax'))
     model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
+
 
 
 # for model after doing the grid search
@@ -66,6 +81,26 @@ def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
         Xrem = removeOutliers(index,X,Y,Ftype)
         return Xrem
 
+
+
+def get_param_grid():
+    grid_step = int(sys.argv[2])
+    if grid_step == 1:
+        activation = ['relu', 'linear', 'sigmoid']
+        return dict(activation=activation)
+    elif grid_step == 2:
+        optimizer = ['Adam', 'SGD']
+        return dict(optimizer=optimizer)
+    elif grid_step == 3:
+        neurons = [3, 6, 12]
+        hidden_layers = [1, 2, 3]
+        return dict(neurons=neurons, hidden_layers=hidden_layers)
+    elif grid_step == 4:
+        memcells = [200, 400, 600]
+        return dict(memcells=memcells)
+    else:
+        print("Error")
+        raise
 
 def main():
     # Max number of words in each X vector
@@ -116,12 +151,7 @@ def main():
     model = KerasClassifier(build_fn=grid_model, look_back=look_back, 
                 input_nodes=num_features, epochs=epochs, 
                 batch_size=batch_size, verbose=0)
-    activation = ['relu', 'linear', 'sigmoid']
-    optimizer = ['Adam', 'SGD']
-    hidden_layers = [1, 2, 3]
-    neurons = [3, 6, 12]
-    param_grid = dict(activation=activation, optimizer=optimizer, 
-                    hidden_layers=hidden_layers, neurons=neurons)
+    param_grid = get_param_grid()
 
     grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
     grid_result = grid.fit(X_train, Y_train)

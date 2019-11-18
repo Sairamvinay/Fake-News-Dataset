@@ -12,9 +12,9 @@ import numpy as np
 import sys
 
 # Usage: 
-# 1. python lstm.py cv
-# 2. python lstm.py tfidf
-# 3. python lstm.py word2vec
+# 1. python svm.py cv
+# 2. python svm.py tfidf
+# 3. python svm.py word2vec
 
 def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
 
