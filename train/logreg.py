@@ -15,7 +15,7 @@ import numpy as np
 def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
 
     X = np.array(X)
-    index,_ = outlierDection(X,Ftype)
+    index,_ = outlierDetection(X,Ftype)
     if not isTest:
         Y = np.array(Y)
         Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
