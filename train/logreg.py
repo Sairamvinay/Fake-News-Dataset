@@ -2,6 +2,8 @@ import readdata
 from text_vectorizer import CV
 from text_vectorizer import TFIDF
 from text_vectorizer import word2vec
+from text_vectorizer import outlierDection
+from OutlierDetectRemove import removeOutliers
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import GridSearchCV
 import sys

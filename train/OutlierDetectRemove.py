@@ -68,7 +68,7 @@ def main():
     print(X_train_WV.shape, " is before removal the X_train shape")
     print(X_test_WV.shape, " is before removal the X_test shape")
 
-     print("\nFor TFIDF\n")
+    print("\nFor TFIDF\n")
     print(X_train_TFIDF.shape," is before removal the X_train shape")
     print(X_test_TFIDF.shape," is before removal the X_test shape")
     
@@ -112,4 +112,5 @@ def main():
 
 if __name__ == '__main__':
 
-    main()
+    #main()
+    pass
