@@ -1,11 +1,7 @@
 import readdata
-from text_vectorizer import CV
-from text_vectorizer import TFIDF
-from text_vectorizer import word2vec
-from text_vectorizer import outlierDection
+from text_vectorizer import outlierDection, word2vec, TFIDF, CV
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras import optimizers
-from tensorflow.keras import Model
+from tensorflow.keras import optimizers, Model
 from tensorflow import keras
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
@@ -45,11 +41,11 @@ import numpy as np
 
 
 # for grid search
-def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='adam', hidden_layers=, neurons=3):
+def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='adam', hidden_layers=1, neurons=3):
     model = keras.Sequential()
     model.add(keras.layers.LSTM(600, dropout=0.2, input_shape=(look_back, input_nodes)))
     
-    for i in range(hidden_layers):
+    for _ in range(hidden_layers):
         model.add(keras.layers.Dense(neurons, activation=activation))
 
     model.add(keras.layers.Dense(1, activation='softmax'))
@@ -86,7 +82,8 @@ def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
 def get_param_grid():
     grid_step = int(sys.argv[2])
     if grid_step == 1:
-        activation = ['relu', 'linear', 'sigmoid']
+        # activation = ['relu', 'linear', 'sigmoid']
+        activation = ['relu', 'linear']
         return dict(activation=activation)
     elif grid_step == 2:
         optimizer = ['Adam', 'SGD']
@@ -100,7 +97,17 @@ def get_param_grid():
         return dict(memcells=memcells)
     else:
         print("Error")
-        raise
+        quit()
+
+
+
+def evaluate(grid_result):
+    means = grid_result.cv_results_['mean_test_score']
+    stds = grid_result.cv_results_['std_test_score']
+    params = grid_result.cv_results_['params']
+    for mean, stdev, param in zip(means, stds, params):
+        print("%f (%f) with: %r" % (mean, stdev, param))  
+
 
 def main():
     # Max number of words in each X vector
@@ -142,24 +149,20 @@ def main():
     num_features = X_train.shape[1]
     X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
 
-    epochs = 2
-    batch_size = 128
+    epochs = 100
+    batch_size = 256
 
     # model = create_model(look_back, num_features)
     # model.fit(X_train, Y_train, epochs=epochs, batch_size=batch_size)
 
     model = KerasClassifier(build_fn=grid_model, look_back=look_back, 
                 input_nodes=num_features, epochs=epochs, 
-                batch_size=batch_size, verbose=0)
+                batch_size=batch_size, verbose=1)
     param_grid = get_param_grid()
 
-    grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
+    grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=2)
     grid_result = grid.fit(X_train, Y_train)
-    means = grid_result.cv_results_['mean_test_score']
-    stds = grid_result.cv_results_['std_test_score']
-    params = grid_result.cv_results_['params']
-    for mean, stdev, param in zip(means, stds, params):
-        print("%f (%f) with: %r" % (mean, stdev, param))    
+    evaluate(grid_result)  
     
 
 
