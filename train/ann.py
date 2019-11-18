@@ -64,18 +64,18 @@ def main():
 
 	if sys.argv[1] == "cv":
 	    X_train, X_test, _ = CV(X_train, X_test) # train shape: (17973, 10000)
-	  	X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
-	  	X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
+	    X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
+	    X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
 	    
 	elif sys.argv[1] == 'tfidf':
-	    X_train, X_test, _ = TFIDF(X_train, X_test) # shape: (17973, 10000)
-	    X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
-	    X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
+		X_train, X_test, _ = TFIDF(X_train, X_test) # shape: (17973, 10000)
+		X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
+		X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
 	    
 	elif sys.argv[1] == 'word2vec':
-	    X_train, X_test = word2vec(X_train, X_test)
-	    X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
-	    X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
+		X_train, X_test = word2vec(X_train, X_test)
+		X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
+		X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
 	    
 	else:
 	    print("Error")
