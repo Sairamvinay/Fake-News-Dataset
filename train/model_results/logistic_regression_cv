@@ -1,0 +1,54 @@
+(1798,)
+(17973,)
+the percentage of outliers in  CV_Train  is:  10.003894730985367 %
+(16175, 10000)  is shape of X for  CV_Train after removing outliers
+(16175,)  is shape of Y for  CV_Train  after removing outlier
+
+(450,)
+(4494,)
+the percentage of outliers in  CV_Test  is:  10.013351134846461 %
+(4044, 10000)  is shape of X for  CV_Test after removing outliers
+
+
+0.940835 (0.001490) with: {'C': 1.0, 'solver': 'newton-cg'}
+0.944111 (0.001029) with: {'C': 1.0, 'solver': 'sag'}
+0.940835 (0.001490) with: {'C': 1.0, 'solver': 'lbfgs'}
+0.941947 (0.001579) with: {'C': 1.0, 'solver': 'liblinear'}
+0.940402 (0.001074) with: {'C': 2.7825594022071245, 'solver': 'newton-cg'}
+0.944235 (0.001093) with: {'C': 2.7825594022071245, 'solver': 'sag'}
+0.940402 (0.001074) with: {'C': 2.7825594022071245, 'solver': 'lbfgs'}
+0.941020 (0.000944) with: {'C': 2.7825594022071245, 'solver': 'liblinear'}
+0.938733 (0.000830) with: {'C': 7.742636826811269, 'solver': 'newton-cg'}
+0.944482 (0.001285) with: {'C': 7.742636826811269, 'solver': 'sag'}
+0.938733 (0.000830) with: {'C': 7.742636826811269, 'solver': 'lbfgs'}
+0.939722 (0.000753) with: {'C': 7.742636826811269, 'solver': 'liblinear'}
+0.936631 (0.001614) with: {'C': 21.544346900318832, 'solver': 'newton-cg'}
+0.944606 (0.000959) with: {'C': 21.544346900318832, 'solver': 'sag'}
+0.936631 (0.001614) with: {'C': 21.544346900318832, 'solver': 'lbfgs'}
+0.937496 (0.000988) with: {'C': 21.544346900318832, 'solver': 'liblinear'}
+0.935456 (0.001812) with: {'C': 59.94842503189409, 'solver': 'newton-cg'}
+0.944297 (0.001145) with: {'C': 59.94842503189409, 'solver': 'sag'}
+0.935456 (0.001812) with: {'C': 59.94842503189409, 'solver': 'lbfgs'}
+0.936878 (0.001228) with: {'C': 59.94842503189409, 'solver': 'liblinear'}
+0.934714 (0.002432) with: {'C': 166.81005372000593, 'solver': 'newton-cg'}
+0.944235 (0.000959) with: {'C': 166.81005372000593, 'solver': 'sag'}
+0.934714 (0.002432) with: {'C': 166.81005372000593, 'solver': 'lbfgs'}
+0.936754 (0.001197) with: {'C': 166.81005372000593, 'solver': 'liblinear'}
+0.933416 (0.002674) with: {'C': 464.15888336127773, 'solver': 'newton-cg'}
+0.944482 (0.001134) with: {'C': 464.15888336127773, 'solver': 'sag'}
+0.933416 (0.002674) with: {'C': 464.15888336127773, 'solver': 'lbfgs'}
+0.936445 (0.001141) with: {'C': 464.15888336127773, 'solver': 'liblinear'}
+0.933168 (0.003025) with: {'C': 1291.5496650148827, 'solver': 'newton-cg'}
+0.944482 (0.001144) with: {'C': 1291.5496650148827, 'solver': 'sag'}
+0.933354 (0.002956) with: {'C': 1291.5496650148827, 'solver': 'lbfgs'}
+0.936198 (0.001197) with: {'C': 1291.5496650148827, 'solver': 'liblinear'}
+0.932859 (0.002872) with: {'C': 3593.813663804626, 'solver': 'newton-cg'}
+0.944482 (0.001268) with: {'C': 3593.813663804626, 'solver': 'sag'}
+0.932859 (0.002872) with: {'C': 3593.813663804626, 'solver': 'lbfgs'}
+0.936198 (0.001234) with: {'C': 3593.813663804626, 'solver': 'liblinear'}
+0.932798 (0.003114) with: {'C': 10000.0, 'solver': 'newton-cg'}
+0.944544 (0.001091) with: {'C': 10000.0, 'solver': 'sag'}
+0.932303 (0.003068) with: {'C': 10000.0, 'solver': 'lbfgs'}
+0.935765 (0.001090) with: {'C': 10000.0, 'solver': 'liblinear'}
+
+NOTE: best parameters are {'C': 21.544346900318832, 'solver': 'sag'}
