@@ -93,7 +93,7 @@ def main():
 	activation = ['relu', 'linear', 'sigmoid']
 	optimizer = ['Adam', 'SGD']
 	hidden_layers = [1, 2, 3]
-	neurons = [3, 6, 12]
+	neurons = [200,400, 600]
 
 	param_grid = dict(activation=activation, optimizer=optimizer, 
 	                hidden_layers=hidden_layers, num_neurons=neurons)

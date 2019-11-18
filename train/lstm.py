@@ -26,13 +26,13 @@ import numpy as np
 #
 # number of hidden layers: 1, 2, 3
 #
-# number of hidden neurons: 3, 6, 12
+# number of hidden neurons: 200, 400, 600
 
 # number of memory cells: 200, 400, 600
 
 
 # Grid search steps:
-# 1. search the best activations, using 1 layer, 3 neurons, 600 cells, Adam
+# 1. search the best activations, using 1 layer, 400 neurons, 600 cells, Adam
 # 2. search the best optimizer, with the best activations found in step 1,
 #    and other hyper-para as step 1
 # 3. search the best hidden layer and hidden neurons
@@ -41,7 +41,7 @@ import numpy as np
 
 
 # for grid search
-def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='adam', hidden_layers=1, neurons=3):
+def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='adam', hidden_layers=1, neurons=400):
     model = keras.Sequential()
     model.add(keras.layers.LSTM(600, dropout=0.2, input_shape=(look_back, input_nodes)))
     
@@ -59,7 +59,7 @@ def create_model(look_back, input_nodes):
     model = keras.Sequential()
     model.add(keras.layers.LSTM(1000, dropout=0.2, input_shape=(look_back, input_nodes)))
     model.add(keras.layers.Dense(1, activation='softmax'))
-    opt = optimizers.Adam(lr=0.01)
+    opt = optimizers.Adam(lr=0.2)
     model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
     return model
 
@@ -149,7 +149,7 @@ def main():
     num_features = X_train.shape[1]
     X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
 
-    epochs = 100
+    epochs = 500
     batch_size = 256
 
     # model = create_model(look_back, num_features)
