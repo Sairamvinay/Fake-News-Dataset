@@ -72,7 +72,7 @@ def word2vec(training_text, testing_text, lstm=False):
     if lstm is True:
         X_train = []
         X_test = []
-        for sentence_train, sentence_test in zip(X_train, X_test):
+        for sentence_train, sentence_test in zip(training_text, testing_text):
             temp = [modelTrain[word] for word in sentence_train]
             X_train.append(temp)
             temp = [modelTest[word] for word in sentence_test]

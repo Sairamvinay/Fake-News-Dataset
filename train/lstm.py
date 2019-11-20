@@ -48,7 +48,7 @@ def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='a
     for _ in range(hidden_layers):
         model.add(keras.layers.Dense(neurons, activation=activation))
 
-    model.add(keras.layers.Dense(1, activation='softmax'))
+    model.add(keras.layers.Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     return model
 
