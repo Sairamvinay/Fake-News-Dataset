@@ -6,13 +6,17 @@ from tensorflow import keras
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 from OutlierDetectRemove import removeOutliers
+from sklearn.model_selection import KFOLD
 import sys
 import numpy as np
 
 # Usage: 
-# python lstm.py <model> <grid-search step>
+# python lstm.py <model> <grid-search step / 0>
 # <model> can be: cv, tfidf, or word2vec
-# <grid-search step> can be: 1, 2, 3, 4
+# The last paramter can be 0 or 'grid-search step'
+# 0 means actual run
+# <grid-search step> can be: 1, 2, 3, 4 to do a grid search
+
 
 # For the first grid search step, do:
 # 1. python lstm.py cv 1 
@@ -143,26 +147,37 @@ def main():
         return
 
     # reshape input to be [samples, time steps, features]
-    # num_samples = X_train.shape[0]
-    # num_features = X_train.shape[1]
-    # X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
+    num_samples = X_train.shape[0]
+    num_features = X_train.shape[1]
+    X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
 
-    num_features = X_train.shape[2]
 
-    epochs = 500
+    epochs = 5
     batch_size = 256
 
-    # model = create_model(look_back, num_features)
-    # model.fit(X_train, Y_train, epochs=epochs, batch_size=batch_size)
 
-    model = KerasClassifier(build_fn=grid_model, look_back=look_back, 
-                input_nodes=num_features, epochs=epochs, 
-                batch_size=batch_size, verbose=1)
-    param_grid = get_param_grid()
+    if int(sys.argv[2]) == 0:
+        kf = KFOLD(n_splits=3, shuffle=True, random_state=1)
+        acc_list = []
+        for train_index, test_index in kf.split(X_train):
+            X_t, X_tt = X_train[train_index], X_train[test_index]
+            y_t, y_tt = Y_train[train_index], Y_train[test_index]
+            model = create_model(look_back, num_features)
+            model.fit(X_t, y_t, epochs=epochs, batch_size=batch_size)
+            print("----Start Evaluating----")
+            _, acc = model.evaluate(X_tt, y_tt)
+            print("Acc:", acc)
+            acc_list.append(acc)
+        print("Average accuracy:", sum(acc_list) / len(acc_list))
+    else:
+        model = KerasClassifier(build_fn=grid_model, look_back=look_back, 
+                    input_nodes=num_features, epochs=epochs, 
+                    batch_size=batch_size, verbose=1)
+        param_grid = get_param_grid()
 
-    grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=2)
-    grid_result = grid.fit(X_train, Y_train)
-    evaluate(grid_result)  
+        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=2)
+        grid_result = grid.fit(X_train, Y_train)
+        evaluate(grid_result)  
     
 
 
