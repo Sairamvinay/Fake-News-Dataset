@@ -63,24 +63,14 @@ def getVector(model,tokens,size = 100):
     return vec
 
 
-def word2vec(training_text, testing_text, lstm=False):
+def word2vec(training_text, testing_text):
     modelTrain = gensim.models.KeyedVectors.load(
             "../fake-news/train_word2vec_model.bin")
-
     modelTest = gensim.models.KeyedVectors.load("../fake-news/test_word2vec_model.bin")
-    
-    if lstm is True:
-        X_train = []
-        for sentence_train in training_text:
-            temp = [modelTrain[word] for word in sentence_train]
-            X_train.append(temp)
-            MAX_LENGTH = 250
-            X_train = pad_sequences(X_train, maxlen=MAX_LENGTH)
-            return X_train, None
-    else:
-        X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
-        X_test =  [getVector(modelTest,sent.split(' ')) for sent in testing_text]
-        return np.array(X_train), np.array(X_test)
+
+    X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
+    X_test =  [getVector(modelTest,sent.split(' ')) for sent in testing_text]
+    return np.array(X_train), np.array(X_test)
 
 
 

@@ -135,19 +135,19 @@ def main():
 
     elif sys.argv[1] == 'word2vec':
         X_train, X_test = word2vec(X_train, X_test)
-        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
-        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
-        look_back = 250
-        # X_train = pad_sequences(X_train, maxlen=MAX_LENGTH)
-        # X_test = pad_sequences(X_test, maxlen=MAX_LENGTH)
+        # X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
+        # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
+        look_back = 1
     else:
         print("Error")
         return
 
     # reshape input to be [samples, time steps, features]
-    num_samples = X_train.shape[0]
-    num_features = X_train.shape[1]
-    X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
+    # num_samples = X_train.shape[0]
+    # num_features = X_train.shape[1]
+    # X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
+
+    num_features = X_train.shape[2]
 
     epochs = 500
     batch_size = 256
@@ -160,7 +160,7 @@ def main():
                 batch_size=batch_size, verbose=1)
     param_grid = get_param_grid()
 
-    grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=2)
+    grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=2)
     grid_result = grid.fit(X_train, Y_train)
     evaluate(grid_result)  
     
