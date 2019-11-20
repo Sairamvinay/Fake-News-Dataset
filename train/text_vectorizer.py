@@ -71,7 +71,7 @@ def word2vec(training_text, testing_text, lstm=False):
     
     if lstm is True:
         X_train = []
-        for sentence_train in training_text, testing_text:
+        for sentence_train in training_text:
             temp = [modelTrain[word] for word in sentence_train]
             X_train.append(temp)
             MAX_LENGTH = 250
