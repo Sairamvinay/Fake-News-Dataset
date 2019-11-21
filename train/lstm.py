@@ -118,7 +118,7 @@ def main():
         look_back = 1
 
     elif sys.argv[1] == 'tfidf':
-        X_train, X_test = TFIDF(X_train, X_test) # shape: (17973, 10000)
+        X_train, X_test = TFIDF(X_train, X_test) # train shape: (17973, 10000)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
         X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
         look_back = 1
