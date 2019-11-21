@@ -7,8 +7,11 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 from outlier_remove import removeOutliers, getRemovedVals
 from sklearn.model_selection import KFOLD
+from sklearn.model_selection import train_test_split
+from roc import save_y
 import sys
 import numpy as np
+from pathlib import Path
 
 # Usage: 
 # python lstm.py <model> <grid-search step / 0>
@@ -44,28 +47,20 @@ import numpy as np
 
 
 
-# for grid search
-def grid_model(look_back=None, input_nodes=None, activation='relu', optimizer='adam', hidden_layers=1, neurons=400):
+def create_model(look_back=None, input_nodes=None, activation='relu', 
+                optimizer='adam', hidden_layers=1, neurons=400, memcells=600):
     model = keras.Sequential()
-    model.add(keras.layers.LSTM(600, dropout=0.2, input_shape=(look_back, input_nodes)))
+    model.add(keras.layers.LSTM(memcells, dropout=0.2, 
+                                input_shape=(look_back, input_nodes)))
     
     for _ in range(hidden_layers):
         model.add(keras.layers.Dense(neurons, activation=activation))
 
     model.add(keras.layers.Dense(1, activation='sigmoid'))
-    model.compile(loss='binary_crossentropy', optimizer=optimizer, metrics=['accuracy'])
+    model.compile(loss='binary_crossentropy', optimizer=optimizer, 
+                    metrics=['accuracy'])
     return model
 
-
-
-# for model after doing the grid search
-def create_model(look_back, input_nodes):
-    model = keras.Sequential()
-    model.add(keras.layers.LSTM(1000, dropout=0.2, input_shape=(look_back, input_nodes)))
-    model.add(keras.layers.Dense(1, activation='softmax'))
-    opt = optimizers.Adam(lr=0.2)
-    model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
-    return model
 
 
 
@@ -112,20 +107,20 @@ def main():
 
 
     if sys.argv[1] == "cv":
-        X_train, X_test = CV(X_train, X_test) # train shape: (17973, 10000)
+        X_train, _ = CV(X_train, X_test) # train shape: (17973, 10000)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
-        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
+        # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
         look_back = 1
 
     elif sys.argv[1] == 'tfidf':
-        X_train, X_test = TFIDF(X_train, X_test) # train shape: (17973, 10000)
+        X_train, _ = TFIDF(X_train, X_test) # train shape: (17973, 10000)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
-        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
+        # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
         look_back = 1
 
     elif sys.argv[1] == 'word2vec':
-        X_train, X_test = word2vec(X_train, X_test)
-        # X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
+        X_train, _ = word2vec(X_train, X_test)
+        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
         # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
         look_back = 1
     else:
@@ -142,21 +137,27 @@ def main():
     batch_size = 256
 
 
-    if int(sys.argv[2]) == 0:
-        kf = KFOLD(n_splits=3, shuffle=True, random_state=1)
-        acc_list = []
-        for train_index, test_index in kf.split(X_train):
-            X_t, X_tt = X_train[train_index], X_train[test_index]
-            y_t, y_tt = Y_train[train_index], Y_train[test_index]
-            model = create_model(look_back, num_features)
-            model.fit(X_t, y_t, epochs=epochs, batch_size=batch_size)
-            print("----Start Evaluating----")
-            _, acc = model.evaluate(X_tt, y_tt)
-            print("Acc:", acc)
-            acc_list.append(acc)
-        print("Average accuracy:", sum(acc_list) / len(acc_list))
-    else:
-        model = KerasClassifier(build_fn=grid_model, look_back=look_back, 
+    if int(sys.argv[2]) == 0: # actual run
+        X_train, X_test, y_train, y_test = train_test_split(
+            X_train, Y_train, random_state = 1, test_size = 0.34)
+        model = create_model(look_back=look_back, input_nodes=num_features)
+        model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
+        print("----Start Evaluating----")
+        _, acc = model.evaluate(X_test, y_test)
+        print("Accuracy:", acc)
+        
+        # Store y_pred vector
+        y_pred = model.predict(X_test)
+        save_y("lstm_y_pred", y_pred)
+
+        # Store y_true vector (Only one script needs this)
+        y_true_file = Path("./model_Ys/y_true.npy")
+        if not y_true_file.is_file():
+            save_y("y_true", y_test)
+
+
+    else: # doing grid search
+        model = KerasClassifier(build_fn=create_model, look_back=look_back, 
                     input_nodes=num_features, epochs=epochs, 
                     batch_size=batch_size, verbose=1)
         param_grid = get_param_grid()
