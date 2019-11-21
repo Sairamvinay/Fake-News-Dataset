@@ -3,18 +3,19 @@ from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 import numpy as np
 
-def graph_roc(y_train):	
-	y_scores, model_names = load_all_y_pred()
-	y_true = load_y('y_true')
+# model_name is either cv, tfidf, or word2vec
+def graph_roc(y_train, model_name):	
+	y_scores, algo_names = load_all_y_pred(model_name)
+	y_true = load_y('true', 'y_true')
 
-	for score, model_name in zip(y_scores, model_names):
+	for score, algo_name in zip(y_scores, algo_names):
 		fpr, tpr, _ = roc_curve(y_true, score)
 		roc_auc = auc(fpr, tpr)
-		label = "ROC curve for %s (area = %0.2f)" % (model_name, roc_auc)
+		label = "ROC curve for %s (area = %0.2f)" % (algo_name, roc_auc)
 		plt.plot(fpr, tpr, color='darkorange',
 				lw=2, label=label)
 
-	plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
+	plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
 	plt.xlim([0.0, 1.0])
 	plt.ylim([0.0, 1.05])
 	plt.xlabel('False Positive Rate')
@@ -29,32 +30,34 @@ def graph_roc(y_train):
 # into an unique file. y_true will only be stored once, since there
 # exists only 1 y_true. So most of you will pass in filename and y_pred.
 # The filename needs to be special for each algo.
-# Filename should be as follows:
+# Filename should be one of the following:
 # ann_y_pred
 # lstm_y_pred
 # svm_y_pred
 # random_forest_y_pred
 # logreg_y_pred
 # y_true (Don't worry about this one)
-# Note: Just pass in the filename. I will add the path for you in the code below
-def save_y(filename, y_pred, y_true=None):
-	path = './model_Ys/' + filename
+#
+# model_name should be one of the following:
+# tfidf, cv, word2vec
+def save_y(model_name, filename, y_pred, y_true=None):
+	path = './model_Ys/' + model_name + '/' + filename
 	np.save(path, y_pred)
 	if y_true is not None:
 		np.save(path, y_true)
 
 
-def load_y(filename):
-	path = './model_Ys/' + filename + '.npy'
+def load_y(model_name, filename):
+	path = './model_Ys/' + model_name + '/' + filename + '.npy'
 	return np.load(path)
 
 
-def load_all_y_pred():
+def load_all_y_pred(model_name):
 	y_list = []
 	filenames = ['ann_y_pred', 'lstm_y_pred', 'svm_y_pred', 
 					'random_forest_y_pred', 'logreg_y_pred']
 	for f in filenames:
-		y_list.append(load_y(f))
+		y_list.append(load_y(model_name, f))
 	
 	model_names = ['ANN', 'LSTM', 'SVM', 'Random Forest', 'Log Reg']
 	return y_list, model_names

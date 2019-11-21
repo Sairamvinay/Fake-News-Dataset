@@ -95,8 +95,6 @@ def evaluate(grid_result):
 
 
 def main():
-    # Max number of words in each X vector
-    MAX_LENGTH = 250
     dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
     dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
 
@@ -145,15 +143,16 @@ def main():
         print("----Start Evaluating----")
         _, acc = model.evaluate(X_test, y_test)
         print("Accuracy:", acc)
-        
-        # Store y_pred vector
+
         y_pred = model.predict(X_test)
-        save_y("lstm_y_pred", y_pred)
+
+        # Store y_pred vector
+        save_y(sys.argv[1], "lstm_y_pred", y_pred)
 
         # Store y_true vector (Only one script needs this)
-        y_true_file = Path("./model_Ys/y_true.npy")
+        y_true_file = Path("./model_Ys/true/y_true.npy")
         if not y_true_file.is_file():
-            save_y("y_true", y_test)
+            save_y("true", "y_true", y_test)
 
 
     else: # doing grid search
