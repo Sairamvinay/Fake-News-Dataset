@@ -5,7 +5,7 @@ from tensorflow.keras import optimizers, Model
 from tensorflow import keras
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
-from OutlierDetectRemove import removeOutliers
+from outlier_remove import removeOutliers, getRemovedVals
 from sklearn.model_selection import KFOLD
 import sys
 import numpy as np
@@ -66,20 +66,6 @@ def create_model(look_back, input_nodes):
     opt = optimizers.Adam(lr=0.2)
     model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy'])
     return model
-
-
-def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
-
-    X = np.array(X)
-    index,_ = outlierDection(X,Ftype)
-    if not isTest:
-        Y = np.array(Y)
-        Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
-        return Xrem,Yrem
-
-    else:
-        Xrem = removeOutliers(index,X,Y,Ftype)
-        return Xrem
 
 
 

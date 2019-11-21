@@ -3,7 +3,7 @@ from text_vectorizer import CV
 from text_vectorizer import TFIDF
 from text_vectorizer import word2vec
 from text_vectorizer import outlierDection
-from OutlierDetectRemove import removeOutliers
+from outlier_remove import removeOutliers, getRemovedVals
 from tensorflow.keras import optimizers
 from tensorflow.keras import Model
 from tensorflow import keras
@@ -34,21 +34,6 @@ def ANN(input_dim = 10000,num_neurons = 500,activation = "relu",hidden_layers = 
 	print("Let's now compile the model")
 	model.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
 	return model
-
-def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
-
-	X = np.array(X)
-	index,_ = outlierDection(X,Ftype)
-	if not isTest:
-		Y = np.array(Y)
-		Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
-		return Xrem,Yrem
-
-	else:
-		Xrem = removeOutliers(index,X,Y,Ftype)
-		return Xrem
-
-
 
 
 

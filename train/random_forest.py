@@ -3,7 +3,7 @@ from text_vectorizer import CV
 from text_vectorizer import TFIDF
 from text_vectorizer import word2vec
 from text_vectorizer import outlierDection
-from OutlierDetectRemove import removeOutliers
+from outlier_remove import removeOutliers, getRemovedVals
 from sklearn import metrics
 from sklearn.ensemble import RandomForestClassifier
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -22,18 +22,6 @@ import sys
 # min_samples_leaf: 2, 4
 # min_samples_split: 5, 10
 
-def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
-
-    X = np.array(X)
-    index,_ = outlierDection(X,Ftype)
-    if not isTest:
-        Y = np.array(Y)
-        Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
-        return Xrem,Yrem
-
-    else:
-        Xrem = removeOutliers(index,X,Y,Ftype)
-        return Xrem
 
 
 def evaluate(pred, truth):

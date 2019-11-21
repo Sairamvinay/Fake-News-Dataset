@@ -6,6 +6,20 @@ from text_vectorizer import outlierDection,word2vec,TFIDF,CV
 import matplotlib.pyplot as plt
 
 
+def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
+
+    X = np.array(X)
+    index,_ = outlierDection(X,Ftype)
+    if not isTest:
+        Y = np.array(Y)
+        Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
+        return Xrem,Yrem
+
+    else:
+        Xrem = removeOutliers(index,X,Y,Ftype)
+        return Xrem
+
+
 def graphOutliers(train,test,x = ["CV","TFIDF","W2V"]):
 	
 	num_grps = len(x)
@@ -23,13 +37,13 @@ def graphOutliers(train,test,x = ["CV","TFIDF","W2V"]):
 
 def removeOutliers(index,X,Y = None,Ftype = "CV train"):
     X_removed = np.delete(X,index,axis = 0)
-    print(X_removed.shape," is shape of X for ", Ftype,"after removing outliers")
+    # print(X_removed.shape," is shape of X for ", Ftype,"after removing outliers")
     if Y is None:
         return X_removed
 
     else:
         Y_removed = np.delete(Y,index,axis = 0)
-        print(Y_removed.shape," is shape of Y for ",Ftype," after removing outlier")
+        # print(Y_removed.shape," is shape of Y for ",Ftype," after removing outlier")
         return X_removed,Y_removed
 
 

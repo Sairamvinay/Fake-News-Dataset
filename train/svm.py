@@ -3,7 +3,7 @@ from text_vectorizer import CV
 from text_vectorizer import TFIDF
 from text_vectorizer import word2vec
 from text_vectorizer import outlierDection
-from OutlierDetectRemove import removeOutliers
+from outlier_remove import removeOutliers, getRemovedVals
 from sklearn import metrics
 from sklearn.svm import SVC
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -16,18 +16,6 @@ import sys
 # 2. python svm.py tfidf
 # 3. python svm.py word2vec
 
-def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
-
-    X = np.array(X)
-    index,_ = outlierDection(X,Ftype)
-    if not isTest:
-        Y = np.array(Y)
-        Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
-        return Xrem,Yrem
-
-    else:
-        Xrem = removeOutliers(index,X,Y,Ftype)
-        return Xrem
 
 def evaluate(pred, truth):
     print('Mean Absolute Error:', metrics.mean_absolute_error(truth, pred))
