@@ -2,14 +2,17 @@ import numpy as np
 import readdata
 from time import time
 import numpy as np
-from text_vectorizer import outlierDection,word2vec,TFIDF,CV
+from text_vectorizer import word2vec,TFIDF,CV
+from sklearn.ensemble import IsolationForest
 import matplotlib.pyplot as plt
+import itertools
 
+RNG = np.random.RandomState(42)
 
 def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
 
     X = np.array(X)
-    index,_ = outlierDection(X,Ftype)
+    index,_ = outlierDetection(X,Ftype)
     if not isTest:
         Y = np.array(Y)
         Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
@@ -18,6 +21,20 @@ def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
     else:
         Xrem = removeOutliers(index,X,Y,Ftype)
         return Xrem
+
+
+def outlierDetection(Features,Ftype):
+
+    clf_Iso = IsolationForest(random_state=RNG,n_jobs = -1)
+    clf_Iso.fit(Features)
+    y_Iso_Forest = clf_Iso.predict(Features)
+    result = np.where(y_Iso_Forest == -1)
+    result = list(itertools.chain.from_iterable(result))
+    # print(np.shape(result))
+    # print(np.shape(y_Iso_Forest))
+    percentOutlier = 100.00 *  np.shape(result)[0]/np.shape(y_Iso_Forest)[0]
+    # print("the percentage of outliers in ",Ftype," is: ",percentOutlier,"%")
+    return result,percentOutlier
 
 
 def graphOutliers(train,test,x = ["CV","TFIDF","W2V"]):
