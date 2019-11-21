@@ -3,15 +3,17 @@ from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 import numpy as np
 
-def graph_roc(y_train):
-	# y_score = grid_result.predict(X_train)
+def graph_roc(y_train):	
+	y_scores, model_names = load_all_y_pred()
+	y_true = load_y('y_true')
 
-	# fpr, tpr, _ = roc_curve(y_train, y_score)
-	roc_auc = auc(fpr, tpr)
+	for score, model_name in zip(y_scores, model_names):
+		fpr, tpr, _ = roc_curve(y_true, score)
+		roc_auc = auc(fpr, tpr)
+		label = "ROC curve for %s (area = %0.2f)" % (model_name, roc_auc)
+		plt.plot(fpr, tpr, color='darkorange',
+				lw=2, label=label)
 
-	lw = 2
-	plt.plot(fpr, tpr, color='darkorange',
-			 lw=lw, label='ROC curve (area = %0.2f)' % roc_auc)
 	plt.plot([0, 1], [0, 1], color='navy', lw=lw, linestyle='--')
 	plt.xlim([0.0, 1.0])
 	plt.ylim([0.0, 1.05])
@@ -34,7 +36,7 @@ def graph_roc(y_train):
 # random_forest_y_pred
 # logreg_y_pred
 # y_true (Don't worry about this one)
-# Note: Just pass in the filename! I will add the path for you in the code below
+# Note: Just pass in the filename. I will add the path for you in the code below
 def save_y(filename, y_pred, y_true=None):
 	path = './model_Ys/' + filename
 	np.save(path, y_pred)
@@ -45,3 +47,14 @@ def save_y(filename, y_pred, y_true=None):
 def load_y(filename):
 	path = './model_Ys/' + filename + '.npy'
 	return np.load(path)
+
+
+def load_all_y_pred():
+	y_list = []
+	filenames = ['ann_y_pred', 'lstm_y_pred', 'svm_y_pred', 
+					'random_forest_y_pred', 'logreg_y_pred']
+	for f in filenames:
+		y_list.append(load_y(f))
+	
+	model_names = ['ANN', 'LSTM', 'SVM', 'Random Forest', 'Log Reg']
+	return y_list, model_names
