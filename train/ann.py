@@ -109,7 +109,7 @@ def main():
 		
 
 		param_grid = get_param_grid()
-		grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
+		grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
 
 		grid_result = grid.fit(X, y)
 		print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
