@@ -51,7 +51,7 @@ def ANN(input_dim = 10000,num_neurons = 500,activation = "relu",hidden_layers = 
 		model.add(keras.layers.Dense(num_neurons,activation = activation))
 
 
-	model.add(keras.layers.Dense(1,activation = "softmax"))	#only binary classification
+	model.add(keras.layers.Dense(1,activation = "sigmoid"))	#only binary classification
 	print("Let's now compile the model")
 	model.compile(loss=loss, optimizer=optimizer, metrics=['accuracy'])
 	return model
