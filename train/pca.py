@@ -34,27 +34,24 @@ def plot(finaldf, model_name):
 
 def main():
     dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
-    dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
-    X_train = dfTrain['text'].to_numpy()
-    X_test = dfTest['text'].to_numpy()
-    Y_train = dfTrain['label'].to_numpy()
+    X = dfTrain['text'].to_numpy()
     if sys.argv[1] == 'cv':
         model_name = 'Count Vectorizer'
-        X_train, _ = CV(X_train, X_test)
+        X = CV(X)
     elif sys.argv[1] == 'tfidf':
         model_name = 'TFIDF'
-        X_train, _ = TFIDF(X_train, X_test)
+        X = TFIDF(X)
     elif sys.argv[1] == 'word2vec':
         model_name = 'word2vec'
-        X_train, _ = word2vec(X_train, X_test)
+        X = word2vec(X)
     else:
         print("Error")
         return
 
     pca = PCA(n_components=2)
     if int(sys.argv[2]) == 1:
-         X_train = StandardScaler().fit_transform(X_train)
-    comp = pca.fit_transform(X_train)
+         X = StandardScaler().fit_transform(X)
+    comp = pca.fit_transform(X)
     xdf = pd.DataFrame(data=comp, columns=['a','b'])
     finaldf = pd.concat([xdf, dfTrain[['label']]], axis=1)
     plot(finaldf, model_name)
