@@ -28,29 +28,24 @@ import sys
 
 def main():
     dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
-    dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
 
-    X_train = dfTrain['text'].to_numpy()
-    y_train = dfTrain['label'].to_numpy()
-    X_test = dfTest['text'].to_numpy() # unlabelled
+    X = dfTrain['text'].to_numpy()
+    y = dfTrain['label'].to_numpy()
 
 
     if sys.argv[1] == "cv":
-        X_train, _ = CV(X_train, X_test) # train shape: (17973, 10000)
-        # X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
-        # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
+        X = CV(X) # train shape: (17973, 10000)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
 
 
     elif sys.argv[1] == 'tfidf':
-        X_train, X_test = TFIDF(X_train, X_test) # train shape: (17973, 10000)
-        X_train,y_train = getRemovedVals(X = X_train,Y = y_train,Ftype = "TFIDF_Train",isTest = False)
-        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
+        X = TFIDF(X) # train shape: (17973, 10000)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
 
 
     elif sys.argv[1] == 'word2vec':
-        X_train, X_test = word2vec(X_train, X_test)
-        X_train,y_train = getRemovedVals(X = X_train,Y = y_train,Ftype = "W2V_Train",isTest = False)
-        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
+        X = word2vec(X)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train",isTest = False)
         
     else:
         print("Error")
@@ -59,7 +54,7 @@ def main():
 
     if int(sys.argv[2]) == 0: # actual run
         X_train, X_test, y_train, y_test = train_test_split(
-            X_train, y_train, random_state = 1, test_size = 0.34)
+            X, y, random_state = 1, test_size = 0.34)
 
         # These are the best hyper-para from the results of grid search
         max_depth = None
@@ -72,7 +67,7 @@ def main():
             min_samples_split=min_samples_split,
             n_estimators=n_estimators, n_jobs=-1)
         model.fit(X_train, y_train)
-        y_pred = model.predict(X_train)
+        #y_pred = model.predict(X_train)
         # print(confusion_matrix(y_train, y_pred))
     
         acc = model.score(X_test, y_test)
@@ -93,7 +88,7 @@ def main():
 
         model = RandomForestClassifier()
         grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
-        grid_result = grid.fit(X_train, y_train)
+        grid_result = grid.fit(X, y)
         means = grid_result.cv_results_['mean_test_score']
         stds = grid_result.cv_results_['std_test_score']
         params = grid_result.cv_results_['params']
