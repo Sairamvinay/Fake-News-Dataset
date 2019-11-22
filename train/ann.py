@@ -61,40 +61,36 @@ def ANN(input_dim = 10000,num_neurons = 500,activation = "relu",hidden_layers = 
 def main():
 
 	dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
-	dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
 
-
-	X_train = dfTrain['text'].to_numpy()
-	Y_train = dfTrain['label'].to_numpy()
-	X_test = dfTest['text'].to_numpy()
+	X = dfTrain['text'].to_numpy()
+	y = dfTrain['label'].to_numpy()
 
 	if sys.argv[1] == "cv":
-	    X_train, X_test = CV(X_train, X_test) # train shape: (17973, 10000)
-	    X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
-	    #X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
+	    X = CV(X) # train shape: (17973, 10000)
+	    X,y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
 	    
 	elif sys.argv[1] == 'tfidf':
-		X_train, X_test = TFIDF(X_train, X_test) # train shape: (17973, 10000)
-		X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
-		#X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
+		X = TFIDF(X) # train shape: (17973, 10000)
+		X,y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
+		
 	    
 	elif sys.argv[1] == 'word2vec':
-		X_train, X_test = word2vec(X_train, X_test)
-		X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
-		#X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
+		X = word2vec(X)
+		X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train",isTest = False)
+		
 	    
 	else:
 	    print("Error")
 	    return
 
 	
-	num_samples = X_train.shape[0]
-	num_features = X_train.shape[1]
+	num_samples = X.shape[0]
+	num_features = X.shape[1]
 
 
 
 	if int(sys.argv[2]) == 0:
-		X_train, X_test, y_train, y_test = train_test_split(X_train, Y_train, random_state = 1, test_size = TEST_RATIO)
+		X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 1, test_size = TEST_RATIO)
 		model = ANN() #need to populate this with best hyperparameters after all Grid search
 		model.fit(X_train,y_train,epochs = EPOCHS,batch_size = BATCH_SIZE)
 		print("----Start Evaluating----")
@@ -115,7 +111,7 @@ def main():
 		param_grid = get_param_grid()
 		grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
 
-		grid_result = grid.fit(X_train, Y_train)
+		grid_result = grid.fit(X, y)
 		print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
 		means = grid_result.cv_results_['mean_test_score']
 		stds = grid_result.cv_results_['std_test_score']
