@@ -6,12 +6,12 @@ from tensorflow import keras
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 from outlier_remove import removeOutliers, getRemovedVals
-from sklearn.model_selection import KFOLD
 from sklearn.model_selection import train_test_split
 from roc import save_y
 import sys
 import numpy as np
 from pathlib import Path
+
 
 # Usage: 
 # python lstm.py <model> <grid-search step / 0>
@@ -159,7 +159,7 @@ def main():
                     batch_size=batch_size, verbose=1)
         param_grid = get_param_grid()
 
-        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=2)
+        grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
         grid_result = grid.fit(X_train, Y_train)
         evaluate(grid_result)  
     
