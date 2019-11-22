@@ -18,7 +18,7 @@ from pathlib import Path
 # <model> can be: cv, tfidf, or word2vec
 # The last paramter can be 0 or 'grid-search step'
 # 0 means actual run
-# <grid-search step> can be: 1, 2, 3, 4 to do a grid search
+# <grid-search step> can be: 1, 2, 3 to do a grid search
 
 
 # For the first grid search step, do:
@@ -32,19 +32,17 @@ from pathlib import Path
 # 2 optimizers: Adam, SGD
 #
 # number of hidden layers: 1, 2
-#
 # number of hidden neurons: 200, 400, 600
-
 # number of memory cells: 200, 400, 600
 # number of memory cells = length of vector 'a' in lstm layer
+
 
 
 # Grid search steps:
 # 1. search the best activations, using 1 layer, 400 neurons, 600 cells, Adam
 # 2. search the best optimizer, with the best activations found in step 1,
 #    and other hyper-para as step 1
-# 3. search the best hidden layer and hidden neurons
-# 4. search the best memory cells
+# 3. search the best hidden layer and hidden neurons and the best memory cells
 
 
 
@@ -76,7 +74,9 @@ def get_param_grid():
     elif grid_step == 3:
         neurons = [200, 400, 600]
         hidden_layers = [1, 2]
-        return dict(neurons=neurons, hidden_layers=hidden_layers)
+        memcells = [200, 400, 600]
+        return dict(neurons=neurons, hidden_layers=hidden_layers,
+                    memcells=memcells)
     elif grid_step == 4:
         memcells = [200, 400, 600]
         return dict(memcells=memcells)
