@@ -77,9 +77,6 @@ def get_param_grid():
         memcells = [200, 400, 600]
         return dict(neurons=neurons, hidden_layers=hidden_layers,
                     memcells=memcells)
-    elif grid_step == 4:
-        memcells = [200, 400, 600]
-        return dict(memcells=memcells)
     else:
         print("Error")
         quit()
