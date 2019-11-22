@@ -2,7 +2,6 @@ import readdata
 from text_vectorizer import CV
 from text_vectorizer import TFIDF
 from text_vectorizer import word2vec
-from text_vectorizer import outlierDection
 from outlier_remove import removeOutliers, getRemovedVals
 from tensorflow.keras import optimizers
 from tensorflow.keras import Model

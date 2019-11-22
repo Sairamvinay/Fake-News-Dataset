@@ -1,5 +1,5 @@
 import readdata
-from text_vectorizer import outlierDection, word2vec, TFIDF, CV
+from text_vectorizer import word2vec, TFIDF, CV
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras import optimizers, Model
 from tensorflow import keras
