@@ -142,7 +142,7 @@ def main():
         model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
         print("----Start Evaluating----")
         _, acc = model.evaluate(X_test, y_test)
-        print("Accuracy:", acc)
+        print("Testing Accuracy:", acc)
 
         y_pred = model.predict(X_test)
 
