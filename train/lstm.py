@@ -156,7 +156,7 @@ def main():
         param_grid = get_param_grid()
 
         grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
-        grid_result = grid.fit(X_train, y_train)
+        grid_result = grid.fit(X, y)
         evaluate(grid_result)  
     
 
