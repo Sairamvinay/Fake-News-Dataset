@@ -45,7 +45,7 @@ from pathlib import Path
 # 3. search the best hidden layer and hidden neurons
 # 4. search the best memory cells
 
-
+TEST_RATIO = 0.34
 
 def create_model(look_back=None, input_nodes=None, activation='relu', 
                 optimizer='adam', hidden_layers=1, neurons=400, memcells=600):
@@ -137,7 +137,7 @@ def main():
 
     if int(sys.argv[2]) == 0: # actual run
         X_train, X_test, y_train, y_test = train_test_split(
-            X_train, Y_train, random_state = 1, test_size = 0.34)
+            X_train, Y_train, random_state = 1, test_size = TEST_RATIO)
         model = create_model(look_back=look_back, input_nodes=num_features)
         model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
         print("----Start Evaluating----")

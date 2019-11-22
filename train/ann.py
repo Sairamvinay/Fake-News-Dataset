@@ -12,13 +12,35 @@ import sys
 import numpy as np
 
 # Usage: 
-# 1. python ann.py cv
-# 2. python ann.py tfidf
-# 3. python ann.py word2vec
+# python ann.py <model> <grid-search step / 0>
+# <model> can be: cv, tfidf, or word2vec
+# The last paramter can be 0 or 'grid-search step'
+# 0 means actual run (not grid search)
+# <grid-search step> can be: 1, 2, 3, 4 to do a grid search
 
 
+TEST_RATIO = 0.34
+EPOCHS = 25
+BATCH_SIZE = 128
 
-def ANN(input_dim = 10000,num_neurons = 500,activation = "relu",hidden_layers = 3,loss = "binary_crossentropy",optimizer = "Adam",batch_size = 500,epochs = 100):
+def get_param_grid():
+    grid_step = int(sys.argv[2])
+    if grid_step == 1:
+        activation = ['relu', 'linear', 'sigmoid']
+        return dict(activation=activation)
+    elif grid_step == 2:
+        optimizer = ['Adam', 'SGD']
+        return dict(optimizer=optimizer)
+    elif grid_step == 3:
+        neurons = [200,400,600]
+        hidden_layers = [1, 2, 3]
+        return dict(neurons=neurons, hidden_layers=hidden_layers)
+    else:
+    	print("Error")
+    	quit()
+
+
+def ANN(input_dim = 10000,num_neurons = 500,activation = "relu",hidden_layers = 3,loss = "binary_crossentropy",optimizer = "Adam",batch_size = BATCH_SIZE,epochs = EPOCHS):
 	
 	
 	model = keras.models.Sequential()
@@ -49,48 +71,60 @@ def main():
 	if sys.argv[1] == "cv":
 	    X_train, X_test = CV(X_train, X_test) # train shape: (17973, 10000)
 	    X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
-	    X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
+	    #X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
 	    
 	elif sys.argv[1] == 'tfidf':
 		X_train, X_test = TFIDF(X_train, X_test) # train shape: (17973, 10000)
 		X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
-		X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
+		#X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
 	    
 	elif sys.argv[1] == 'word2vec':
 		X_train, X_test = word2vec(X_train, X_test)
 		X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
-		X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
+		#X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
 	    
 	else:
 	    print("Error")
 	    return
 
+	
 	num_samples = X_train.shape[0]
 	num_features = X_train.shape[1]
 
-	epochs = 100
-	batch_size = 128
 
-	model = KerasClassifier(build_fn=ANN,
-	            input_dim = num_features, epochs = epochs, 
-	            batch_size = batch_size, verbose=1)
-	activation = ['relu', 'linear', 'sigmoid']
-	optimizer = ['Adam', 'SGD']
-	hidden_layers = [1, 2, 3]
-	neurons = [200,400, 600]
 
-	param_grid = dict(activation=activation, optimizer=optimizer, 
-	                hidden_layers=hidden_layers, num_neurons=neurons)
+	if int(sys.argv[2]) == 0:
+		X_train, X_test, y_train, y_test = train_test_split(X_train, Y_train, random_state = 1, test_size = TEST_RATIO)
+		model = ANN() #need to populate this with best hyperparameters after all Grid search
+		model.fit(X_train,y_train,epochs = EPOCHS,batch_size = BATCH_SIZE)
+		print("----Start Evaluating----")
+	    _, acc = model.evaluate(X_test, y_test)
+	    print("Testing Accuracy:", acc * 100.00,"%")
 
-	grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
+	    y_pred = model.predict(X_test)
 
-	grid_result = grid.fit(X_train, Y_train)
-	print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
-	means = grid_result.cv_results_['mean_test_score']
-	stds = grid_result.cv_results_['std_test_score']
-	params = grid_result.cv_results_['params']
-	for mean, stdev, param in zip(means, stds, params):
-	    print("%f (%f) with: %r" % (mean, stdev, param))
+	    # Store y_pred vector
+	    save_y(sys.argv[1], "ann_y_pred", y_pred)
+
+
+
+	else:
+
+		model = KerasClassifier(build_fn=ANN,
+		            input_dim = num_features, epochs = EPOCHS, 
+		            batch_size = BATCH_SIZE, verbose=0)
+		
+
+		param_grid = get_param_grid()
+		grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
+
+		grid_result = grid.fit(X_train, Y_train)
+		print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))
+		means = grid_result.cv_results_['mean_test_score']
+		stds = grid_result.cv_results_['std_test_score']
+		params = grid_result.cv_results_['params']
+		for mean, stdev, param in zip(means, stds, params):
+		    print("%f (%f) with: %r" % (mean, stdev, param))
 	
 
 
