@@ -61,7 +61,7 @@ def main():
             X_train, y_train, random_state = 1, test_size = 0.34)
 
         # These are the best hyper-para from the results of grid search
-        max_depth = 40
+        max_depth = None
         min_samples_leaf = 2
         min_samples_split = 5
         n_estimators = 200
