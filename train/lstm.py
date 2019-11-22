@@ -112,7 +112,7 @@ def main():
         # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
 
     elif sys.argv[1] == 'word2vec':
-        X_train, _ = word2vec(X_train, X_test)
+        X_train, _ = word2vec(X_train, X_test) # train shape: (17193, 100)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
         # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
     else:
@@ -125,12 +125,10 @@ def main():
     num_features = X_train.shape[1]
     X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
 
-
-    epochs = 5
     batch_size = 256
 
-
     if int(sys.argv[2]) == 0: # actual run
+        epochs = 20 # can change this
         X_train, X_test, y_train, y_test = train_test_split(
             X_train, Y_train, random_state = 1, test_size = TEST_RATIO)
         model = create_model(look_back=look_back, input_nodes=num_features)
@@ -151,6 +149,7 @@ def main():
 
 
     else: # doing grid search
+        epochs = 5
         model = KerasClassifier(build_fn=create_model, look_back=look_back, 
                     input_nodes=num_features, epochs=epochs, 
                     batch_size=batch_size, verbose=1)
