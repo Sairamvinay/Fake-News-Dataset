@@ -68,14 +68,14 @@ def create_model(look_back=None, input_nodes=None, activation='relu',
 def get_param_grid():
     grid_step = int(sys.argv[2])
     if grid_step == 1:
-        activation = ['relu', 'linear']
+        activation = ['relu', 'linear', 'sigmoid']
         return dict(activation=activation)
     elif grid_step == 2:
         optimizer = ['Adam', 'SGD']
         return dict(optimizer=optimizer)
     elif grid_step == 3:
-        neurons = [3, 6, 12]
-        hidden_layers = [1, 2, 3]
+        neurons = [200, 400, 600]
+        hidden_layers = [1, 2]
         return dict(neurons=neurons, hidden_layers=hidden_layers)
     elif grid_step == 4:
         memcells = [200, 400, 600]
