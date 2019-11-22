@@ -105,7 +105,7 @@ def main():
 
 		model = KerasClassifier(build_fn=ANN,
 		            input_dim = num_features, epochs = EPOCHS, 
-		            batch_size = BATCH_SIZE, verbose=1)
+		            batch_size = BATCH_SIZE, verbose=1,activation = "sigmoid")
 		
 
 		param_grid = get_param_grid()
