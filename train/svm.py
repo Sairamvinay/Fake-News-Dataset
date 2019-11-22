@@ -25,28 +25,23 @@ def evaluate(pred, truth):
 
 def main():
     dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
-    dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
 
-    X_train = dfTrain['text'].to_numpy()
-    Y_train = dfTrain['label'].to_numpy()
-    X_test = dfTest['text'].to_numpy() # unlabelled
+    X = dfTrain['text'].to_numpy()
+    y = dfTrain['label'].to_numpy()
 
     if sys.argv[1] == "cv":
-        X_train, X_test = CV(X_train, X_test) # train shape: (17973, 10000)
-        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
-        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
+        X = CV(X) # train shape: (17973, 10000)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
 
 
     elif sys.argv[1] == 'tfidf':
-        X_train, X_test = TFIDF(X_train, X_test) # shape: (17973, 10000)
-        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
-        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
+        X = TFIDF(X) # shape: (17973, 10000)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
 
 
     elif sys.argv[1] == 'word2vec':
-        X_train, X_test = word2vec(X_train, X_test)
-        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
-        X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
+        X = word2vec(X)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train",isTest = False)
         
     else:
         print("Error")
@@ -56,7 +51,7 @@ def main():
     svm = SVC()
     parameters = {'kernel':('linear', 'rbf'), 'C':(0.25,0.5,0.75)}
     grid = GridSearchCV(estimator = svm, param_grid = parameters,n_jobs=-1, cv=3,verbose=1)
-    grid_result = grid.fit(X_train, Y_train)
+    grid_result = grid.fit(X, y)
     means = grid_result.cv_results_['mean_test_score']
     stds = grid_result.cv_results_['std_test_score']
     params = grid_result.cv_results_['params']
