@@ -31,11 +31,12 @@ from pathlib import Path
 # 
 # 2 optimizers: Adam, SGD
 #
-# number of hidden layers: 1, 2, 3
+# number of hidden layers: 1, 2
 #
 # number of hidden neurons: 200, 400, 600
 
 # number of memory cells: 200, 400, 600
+# number of memory cells = length of vector 'a' in lstm layer
 
 
 # Grid search steps:
@@ -67,7 +68,6 @@ def create_model(look_back=None, input_nodes=None, activation='relu',
 def get_param_grid():
     grid_step = int(sys.argv[2])
     if grid_step == 1:
-        # activation = ['relu', 'linear', 'sigmoid']
         activation = ['relu', 'linear']
         return dict(activation=activation)
     elif grid_step == 2:
@@ -108,23 +108,21 @@ def main():
         X_train, _ = CV(X_train, X_test) # train shape: (17973, 10000)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
         # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
-        look_back = 1
 
     elif sys.argv[1] == 'tfidf':
         X_train, _ = TFIDF(X_train, X_test) # train shape: (17973, 10000)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
         # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
-        look_back = 1
 
     elif sys.argv[1] == 'word2vec':
         X_train, _ = word2vec(X_train, X_test)
         X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
         # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
-        look_back = 1
     else:
         print("Error")
         return
 
+    look_back = 1
     # reshape input to be [samples, time steps, features]
     num_samples = X_train.shape[0]
     num_features = X_train.shape[1]
