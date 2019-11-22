@@ -72,18 +72,14 @@ def main():
             min_samples_split=min_samples_split,
             n_estimators=n_estimators, n_jobs=-1)
         model.fit(X_train, y_train)
-        print("----Start Evaluating----")
-        acc = model.score(X_train, y_train)
-        print("Training Accuracy:", acc)
-
         y_pred = model.predict(X_train)
-        print(confusion_matrix(y_train, y_pred))
+        # print(confusion_matrix(y_train, y_pred))
     
         acc = model.score(X_test, y_test)
         print("Testing Accuracy:", acc)
 
         y_pred = model.predict(X_test)
-        print(confusion_matrix(y_test, y_pred))
+        # print(confusion_matrix(y_test, y_pred))
     
     elif int(sys.argv[2]) == 1: # grid search
         # below are the hyperparameters to be grid-searched on

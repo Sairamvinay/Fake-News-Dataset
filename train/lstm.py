@@ -7,6 +7,7 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 from outlier_remove import removeOutliers, getRemovedVals
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold
 from roc import save_y
 import sys
 import numpy as np
@@ -44,7 +45,6 @@ from pathlib import Path
 #    and other hyper-para as step 1
 # 3. search the best hidden layer and hidden neurons and the best memory cells
 
-TEST_RATIO = 0.34
 
 def create_model(look_back=None, input_nodes=None, activation='relu', 
                 optimizer='adam', hidden_layers=1, neurons=400, memcells=600):
@@ -93,50 +93,50 @@ def evaluate(grid_result):
 
 def main():
     dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
-    dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
-
-    X_train = dfTrain['text'].to_numpy()
-    Y_train = dfTrain['label'].to_numpy()
-    X_test = dfTest['text'].to_numpy()
-
-
+    X = dfTrain['text'].to_numpy()
+    y= dfTrain['label'].to_numpy()
 
     if sys.argv[1] == "cv":
-        X_train, _ = CV(X_train, X_test) # train shape: (17973, 10000)
-        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "CV_Train",isTest = False)
-        # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "CV_Test",isTest = True)
+        X = CV(X) # train shape: (17973, 10000)
+        X, y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
 
     elif sys.argv[1] == 'tfidf':
-        X_train, _ = TFIDF(X_train, X_test) # train shape: (17973, 10000)
-        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "TFIDF_Train",isTest = False)
-        # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "TFIDF_Test",isTest = True)
+        X = TFIDF(X) # train shape: (17973, 10000)
+        X, y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
 
     elif sys.argv[1] == 'word2vec':
-        X_train, _ = word2vec(X_train, X_test) # train shape: (17193, 100)
-        X_train,Y_train = getRemovedVals(X = X_train,Y = Y_train,Ftype = "W2V_Train",isTest = False)
-        # X_test = getRemovedVals(X = X_test,Y = None,Ftype = "W2V_Test",isTest = True)
+        X = word2vec(X) # train shape: (17193, 100)
+        X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
+
     else:
         print("Error")
         return
 
     look_back = 1
+
     # reshape input to be [samples, time steps, features]
-    num_samples = X_train.shape[0]
-    num_features = X_train.shape[1]
-    X_train = np.reshape(np.array(X_train), (num_samples, look_back, num_features))
+    num_samples = X.shape[0]
+    num_features = X.shape[1]
+    X = np.reshape(np.array(X), (num_samples, look_back, num_features))
 
     batch_size = 256
 
     if int(sys.argv[2]) == 0: # actual run
-        epochs = 20 # can change this
-        X_train, X_test, y_train, y_test = train_test_split(
-            X_train, Y_train, random_state = 1, test_size = TEST_RATIO)
-        model = create_model(look_back=look_back, input_nodes=num_features)
-        model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
-        print("----Start Evaluating----")
-        _, acc = model.evaluate(X_test, y_test)
-        print("Testing Accuracy:", acc)
-
+        epochs = 30 # can change this
+        kf = KFold(n_splits=3, random_state=1)
+        acc_list = []
+        X_train = None # init
+        X_test = None # init
+        for train_index, test_index in kf.split(X):
+            X_train, X_test = X[train_index], X[test_index]
+            y_train, y_test = y[train_index], y[test_index]
+            model = create_model(look_back=look_back, input_nodes=num_features)
+            model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
+            print("----Start Evaluating----")
+            _, acc = model.evaluate(X_test, y_test, verbose=0)
+            acc_list.append(acc)
+            print("Testing Accuracy:", acc)
+        print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
         y_pred = model.predict(X_test)
 
         # Store y_pred vector
@@ -156,7 +156,7 @@ def main():
         param_grid = get_param_grid()
 
         grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
-        grid_result = grid.fit(X_train, Y_train)
+        grid_result = grid.fit(X_train, y_train)
         evaluate(grid_result)  
     
 
