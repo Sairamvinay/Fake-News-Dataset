@@ -98,14 +98,11 @@ def main():
 		model = ANN() #need to populate this with best hyperparameters after all Grid search
 		model.fit(X_train,y_train,epochs = EPOCHS,batch_size = BATCH_SIZE)
 		print("----Start Evaluating----")
-	    _, acc = model.evaluate(X_test, y_test)
-	    print("Testing Accuracy:", acc * 100.00,"%")
-
-	    y_pred = model.predict(X_test)
-
-	    # Store y_pred vector
-	    save_y(sys.argv[1], "ann_y_pred", y_pred)
-
+		_, acc = model.evaluate(X_test, y_test)
+		print("Testing Accuracy:", acc * 100.00,"%")
+		y_pred = model.predict(X_test)
+		# Store y_pred vector
+		save_y(sys.argv[1], "ann_y_pred", y_pred)
 
 
 	else:
@@ -125,7 +122,7 @@ def main():
 		params = grid_result.cv_results_['params']
 		for mean, stdev, param in zip(means, stds, params):
 		    print("%f (%f) with: %r" % (mean, stdev, param))
-	
+
 
 
 if __name__ == '__main__':
