@@ -1,0 +1,27 @@
+0.937125 (0.004813) with: {'activation': 'relu'}
+0.937434 (0.005999) with: {'activation': 'linear'}
+0.944235 (0.003596) with: {'activation': 'sigmoid'}
+
+0.942566 (0.003466) with: {'optimizer': 'Adam'}
+0.573849 (0.003387) with: {'optimizer': 'SGD'}
+
+0.944544 (0.002983) with: {'hidden_layers': 1, 'memcells': 200, 'neurons': 200}
+0.943555 (0.005021) with: {'hidden_layers': 1, 'memcells': 200, 'neurons': 400}
+0.944420 (0.002757) with: {'hidden_layers': 1, 'memcells': 200, 'neurons': 600}
+0.944915 (0.003950) with: {'hidden_layers': 1, 'memcells': 400, 'neurons': 200}
+0.945039 (0.003840) with: {'hidden_layers': 1, 'memcells': 400, 'neurons': 400}
+0.945100 (0.003154) with: {'hidden_layers': 1, 'memcells': 400, 'neurons': 600}
+0.944853 (0.004452) with: {'hidden_layers': 1, 'memcells': 600, 'neurons': 200}
+0.943308 (0.003099) with: {'hidden_layers': 1, 'memcells': 600, 'neurons': 400}
+0.942566 (0.001013) with: {'hidden_layers': 1, 'memcells': 600, 'neurons': 600}
+0.945719 (0.002453) with: {'hidden_layers': 2, 'memcells': 200, 'neurons': 200}
+0.943308 (0.003157) with: {'hidden_layers': 2, 'memcells': 200, 'neurons': 400}
+0.945966 (0.002169) with: {'hidden_layers': 2, 'memcells': 200, 'neurons': 600}
+0.943184 (0.003275) with: {'hidden_layers': 2, 'memcells': 400, 'neurons': 200}
+0.943369 (0.001079) with: {'hidden_layers': 2, 'memcells': 400, 'neurons': 400}
+0.942257 (0.003267) with: {'hidden_layers': 2, 'memcells': 400, 'neurons': 600}
+0.945162 (0.002153) with: {'hidden_layers': 2, 'memcells': 600, 'neurons': 200}
+0.944111 (0.001444) with: {'hidden_layers': 2, 'memcells': 600, 'neurons': 400}
+0.944420 (0.003459) with: {'hidden_layers': 2, 'memcells': 600, 'neurons': 600}
+
+Best: {'activation': 'sigmoid'}， {'optimizer': 'Adam'}，  {'hidden_layers': 2, 'memcells': 200, 'neurons': 600}

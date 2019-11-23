@@ -13,35 +13,35 @@ MAX_FEATURES = 10000
 # Parameters: 2 arrays of strings which contain the text of each article within the dataset for train and test
 # Returns: 2 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
 # '''
-def CV(training_text,testing_text):
+def CV(training_text):
     cv = CountVectorizer(max_features = MAX_FEATURES)
     cv.fit(training_text)
 
     X_train = cv.transform(training_text)
-    X_test = cv.transform(testing_text)
+    # X_test = cv.transform(testing_text)
     # words = cv.get_feature_names()
 
     X_train = X_train.todense()
-    X_test = X_test.todense()
-    return X_train,X_test
+    # X_test = X_test.todense()
+    return X_train
 
 
 # '''
 # Parameters: 2 arrays of strings which contain the text of each article within the dataset for train and test
 # Returns: 2 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
 # '''
-def TFIDF(training_text,testing_text):
+def TFIDF(training_text):
     tfidf = TfidfVectorizer(max_features = MAX_FEATURES)
     tfidf.fit(training_text)
     
     X_train = tfidf.transform(training_text)
-    X_test = tfidf.transform(testing_text)
+    # X_test = tfidf.transform(testing_text)
     # words = tfidf.get_feature_names()
 
     X_train = X_train.todense()
-    X_test = X_test.todense()
+    # X_test = X_test.todense()
 
-    return X_train,X_test
+    return X_train
 
 
 def getVector(model,tokens,size = 100):
@@ -62,12 +62,12 @@ def getVector(model,tokens,size = 100):
     return vec
 
 
-def word2vec(training_text, testing_text):
+def word2vec(training_text):
     modelTrain = gensim.models.KeyedVectors.load(
             "../fake-news/train_word2vec_model.bin")
-    modelTest = gensim.models.KeyedVectors.load("../fake-news/test_word2vec_model.bin")
+    # modelTest = gensim.models.KeyedVectors.load("../fake-news/test_word2vec_model.bin")
 
     X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
-    X_test =  [getVector(modelTest,sent.split(' ')) for sent in testing_text]
-    return np.array(X_train), np.array(X_test)
+    # X_test =  [getVector(modelTest,sent.split(' ')) for sent in testing_text]
+    return np.array(X_train)
 
