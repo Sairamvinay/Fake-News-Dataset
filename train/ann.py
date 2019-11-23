@@ -34,7 +34,7 @@ def get_param_grid():
     elif grid_step == 3:
         neurons = [200,400,600]
         hidden_layers = [1, 2, 3]
-        return dict(neurons=neurons, hidden_layers=hidden_layers)
+        return dict(num_neurons=neurons, hidden_layers=hidden_layers)
     else:
     	print("Error")
     	quit()
