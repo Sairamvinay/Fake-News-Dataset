@@ -34,7 +34,7 @@ def get_param_grid():
     elif grid_step == 3:
         neurons = [200,400,600]
         hidden_layers = [1, 2, 3]
-        return dict(neurons=neurons, hidden_layers=hidden_layers)
+        return dict(num_neurons=neurons, hidden_layers=hidden_layers)
     else:
     	print("Error")
     	quit()
@@ -105,11 +105,11 @@ def main():
 
 		model = KerasClassifier(build_fn=ANN,
 		            input_dim = num_features, epochs = EPOCHS, 
-		            batch_size = BATCH_SIZE, verbose=1)
+		            batch_size = BATCH_SIZE, verbose=1,activation = "sigmoid")
 		
 
 		param_grid = get_param_grid()
-		grid = GridSearchCV(estimator=model, param_grid=param_grid, n_jobs=-1, cv=3)
+		grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
 
 		grid_result = grid.fit(X, y)
 		print("Best: %f using %s" % (grid_result.best_score_, grid_result.best_params_))

@@ -1,0 +1,8 @@
+0.940958 (0.002722) with: {'C': 0.25, 'kernel': 'linear'}
+0.573849 (0.000050) with: {'C': 0.25, 'kernel': 'rbf'}
+0.945100 (0.002506) with: {'C': 0.5, 'kernel': 'linear'}
+0.573849 (0.000050) with: {'C': 0.5, 'kernel': 'rbf'}
+0.945781 (0.001706) with: {'C': 0.75, 'kernel': 'linear'}
+0.573849 (0.000050) with: {'C': 0.75, 'kernel': 'rbf'}
+
+Best: 0.945781 using {'C': 0.75, 'kernel': 'linear'}
