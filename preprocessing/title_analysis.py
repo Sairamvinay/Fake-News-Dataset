@@ -14,7 +14,6 @@ dfFalse = df[df['label']==1]
 # find the size of the data frame
 
 i = 1
-samples_features = []
 # collect 5 features for now to do the analysis
 POS = defaultdict(int)
 TAG = defaultdict(int)
@@ -25,7 +24,7 @@ with open("FalseDataFeature_dict.csv", "w", newline="") as f:
     writer = csv.writer(f, delimiter=',')
     for sen in dfFalse['title'].dropna():
         start_time = time.time()
-        print(sen)
+        #print(sen)
         doc = nlp(sen)
         for token in doc:
             POS[token.pos_]+=1
@@ -33,11 +32,14 @@ with open("FalseDataFeature_dict.csv", "w", newline="") as f:
             DEP[token.dep_]+=1
             ALPHA[token.is_alpha]+=1
             STOP[token.is_stop]+=1
-        print(row)
-        samples_features.append(row)
         second_time = time.time()
+        print(POS)
+        print(TAG)
+        print(DEP)
+        #print(ALPHA)
+        #print(STOP)
         print("time estimates to load ", i)
         print("th sample: %s seconds" % (second_time-start_time))
         i+=1
 row = [POS, TAG, DEP, ALPHA, STOP]
-writer.writerows(row)
+print(row)
