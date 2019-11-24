@@ -6,7 +6,7 @@ from collections import defaultdict
 nlp = spacy.load('en_core_web_sm')
 
 # load in my data as data frame
-df = pd.read_csv('../fake-news/train.csv')
+df = pd.read_csv('../fake-news/train_clean.csv')
 
 dfTrue = df[df['label']==0]
 dfFalse = df[df['label']==1]
@@ -33,13 +33,10 @@ with open("FalseDataFeature_dict.csv", "w", newline="") as f:
             ALPHA[token.is_alpha]+=1
             STOP[token.is_stop]+=1
         second_time = time.time()
-        print(POS)
-        print(TAG)
-        print(DEP)
-        #print(ALPHA)
-        #print(STOP)
         print("time estimates to load ", i)
         print("th sample: %s seconds" % (second_time-start_time))
         i+=1
-row = [POS, TAG, DEP, ALPHA, STOP]
-print(row)
+#row = [POS, TAG, DEP, ALPHA, STOP]
+print(POS)
+print(TAG)
+print(DEP)
