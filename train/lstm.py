@@ -106,7 +106,7 @@ def main():
 
     elif sys.argv[1] == 'word2vec':
         X = word2vec(X) # train shape: (17193, 100)
-        X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
+        # X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
 
     else:
         print("Error")
