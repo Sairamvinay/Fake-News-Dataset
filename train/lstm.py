@@ -173,7 +173,7 @@ def main():
 
 
     else: # doing grid search
-        epochs = 5
+        epochs = 25
         model = KerasClassifier(build_fn=create_model, look_back=look_back, 
                     input_nodes=num_features, epochs=epochs, 
                     batch_size=batch_size, verbose=1)
