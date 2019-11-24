@@ -1,0 +1,21 @@
+W2V ANN
+
+Best: 0.932117 using {'activation': 'relu'}
+0.932117 (0.002386) with: {'activation': 'relu'}
+0.909119 (0.005516) with: {'activation': 'linear'}
+0.907079 (0.004503) with: {'activation': 'sigmoid'}
+
+Best: 0.934467 using {'optimizer': 'Adam'}
+0.934467 (0.001118) with: {'optimizer': 'Adam'}
+0.911283 (0.003196) with: {'optimizer': 'SGD'}
+
+Best: 0.937434 using {'hidden_layers': 1, 'num_neurons': 600}
+0.931252 (0.001142) with: {'hidden_layers': 1, 'num_neurons': 200}
+0.929768 (0.004236) with: {'hidden_layers': 1, 'num_neurons': 400}
+0.937434 (0.003641) with: {'hidden_layers': 1, 'num_neurons': 600}
+0.926739 (0.003264) with: {'hidden_layers': 2, 'num_neurons': 200}
+0.934714 (0.001710) with: {'hidden_layers': 2, 'num_neurons': 400}
+0.933601 (0.002786) with: {'hidden_layers': 2, 'num_neurons': 600}
+0.928717 (0.002775) with: {'hidden_layers': 3, 'num_neurons': 200}
+0.933045 (0.004626) with: {'hidden_layers': 3, 'num_neurons': 400}
+0.932427 (0.003841) with: {'hidden_layers': 3, 'num_neurons': 600}

@@ -62,12 +62,35 @@ def getVector(model,tokens,size = 100):
     return vec
 
 
-def word2vec(training_text):
+def word2vec(training_text, lstm=False):
     modelTrain = gensim.models.KeyedVectors.load(
             "../fake-news/train_word2vec_model.bin")
-    # modelTest = gensim.models.KeyedVectors.load("../fake-news/test_word2vec_model.bin")
+    # modelTrain = gensim.models.KeyedVectors.load(
+    #     "../fake-news/train_word2vec_model_count5.bin")
 
-    X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
-    # X_test =  [getVector(modelTest,sent.split(' ')) for sent in testing_text]
-    return np.array(X_train)
+    if lstm is True:
+        paras = []
+        for sample in training_text:
+            # clip sample at 200 words
+            sample = sample.split()
+            sample = sample[:200]
+            embeds = np.empty((0, 100), np.float32)
+            for i in range(200):
+                if len(sample) <= i:
+                    embeds = np.vstack((embeds, np.zeros(100, np.float32)))
+                else:
+                    word = sample[i]
+                    try:
+                        # modelTrain[word] is a vector of shape (100, )
+                        embeds = np.vstack((embeds, modelTrain[word]))
+                    except KeyError:
+                        embeds = np.vstack((embeds, np.zeros(100, np.float32)))
+
+            # Now the shape of embeds is (250, 100)
+            # stack it into 3-d
+            paras.append(embeds)
+        return np.array(paras)
+    else:
+        X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
+        return np.array(X_train)
 

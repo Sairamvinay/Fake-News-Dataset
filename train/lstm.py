@@ -12,7 +12,7 @@ from roc import save_y
 import sys
 import numpy as np
 from pathlib import Path
-
+from graphs_neuron_network import graphs_nn
 
 # Usage: 
 # python lstm.py <model> <grid-search step / 0>
@@ -47,9 +47,9 @@ from pathlib import Path
 
 
 def create_model(look_back=None, input_nodes=None, activation='relu', 
-                optimizer='adam', hidden_layers=1, neurons=400, memcells=600):
+                optimizer='adam', hidden_layers=1, neurons=400, hidden_units=600):
     model = keras.Sequential()
-    model.add(keras.layers.LSTM(memcells, dropout=0.2, 
+    model.add(keras.layers.LSTM(hidden_units, dropout=0.2, 
                                 input_shape=(look_back, input_nodes)))
     
     for _ in range(hidden_layers):
@@ -74,9 +74,9 @@ def get_param_grid():
     elif grid_step == 3:
         neurons = [200, 400, 600]
         hidden_layers = [1, 2]
-        memcells = [200, 400, 600]
+        hidden_units = [200, 400, 600]
         return dict(neurons=neurons, hidden_layers=hidden_layers,
-                    memcells=memcells)
+                    hidden_units=hidden_units)
     else:
         print("Error")
         quit()
@@ -99,57 +99,81 @@ def main():
     if sys.argv[1] == "cv":
         X = CV(X) # train shape: (17973, 10000)
         X, y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
+        look_back = 1
 
     elif sys.argv[1] == 'tfidf':
         X = TFIDF(X) # train shape: (17973, 10000)
         X, y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
+        look_back = 1
 
     elif sys.argv[1] == 'word2vec':
-        X = word2vec(X) # train shape: (17193, 100)
-        X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
+        X = word2vec(X, lstm=True) # train shape: (17193, 100)
+        # X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
+        look_back = X.shape[1]
+        # look_back = 1
 
     else:
         print("Error")
         return
 
-    look_back = 1
-
-    # reshape input to be [samples, time steps, features]
     num_samples = X.shape[0]
-    num_features = X.shape[1]
-    X = np.reshape(np.array(X), (num_samples, look_back, num_features))
+
+    if look_back == 1:
+        # reshape input to be [samples, time steps, features]
+        num_features = X.shape[1]
+        X = np.reshape(np.array(X), (num_samples, look_back, num_features))
+    else:
+        num_features = X.shape[2]
 
     batch_size = 256
 
     if int(sys.argv[2]) == 0: # actual run
-        epochs = 30 # can change this
+        epochs = 20 # can change this
         kf = KFold(n_splits=3, random_state=1)
         acc_list = []
         X_train = None # init
         X_test = None # init
+
+        # X_train, X_test, y_train, y_test = train_test_split(
+        #     X, y, test_size=0.33, random_state=42)
+        # model = create_model(look_back=look_back, input_nodes=num_features)
+        # history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
+        #                         epochs=epochs, batch_size=batch_size)
+        # _, acc = model.evaluate(X_test, y_test, verbose=0)
+        # print("Testing Accuracy:", acc)
+
         for train_index, test_index in kf.split(X):
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = y[train_index], y[test_index]
             model = create_model(look_back=look_back, input_nodes=num_features)
-            model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
+            history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
+                                epochs=epochs, batch_size=batch_size)
             print("----Start Evaluating----")
             _, acc = model.evaluate(X_test, y_test, verbose=0)
             acc_list.append(acc)
             print("Testing Accuracy:", acc)
         print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
-        y_pred = model.predict(X_test)
 
-        # Store y_pred vector
-        save_y(sys.argv[1], "lstm_y_pred", y_pred)
 
-        # Store y_true vector (Only one script needs this)
-        y_true_file = Path("./model_Ys/true/y_true.npy")
-        if not y_true_file.is_file():
-            save_y("true", "y_true", y_test)
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
+        accuracy = history.history['accuracy']
+        val_accuracy = history.history['val_accuracy']
+        graphs_nn(loss, val_loss, accuracy, val_accuracy)
+
+        # y_pred = model.predict(X_test)
+
+        # # Store y_pred vector
+        # save_y(sys.argv[1], "lstm_y_pred", y_pred)
+
+        # # Store y_true vector (Only one script needs this)
+        # y_true_file = Path("./model_Ys/true/y_true.npy")
+        # if not y_true_file.is_file():
+        #     save_y("true", "y_true", y_test)
 
 
     else: # doing grid search
-        epochs = 5
+        epochs = 25
         model = KerasClassifier(build_fn=create_model, look_back=look_back, 
                     input_nodes=num_features, epochs=epochs, 
                     batch_size=batch_size, verbose=1)

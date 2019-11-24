@@ -8,6 +8,7 @@ from tensorflow.keras import Model
 from tensorflow import keras
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
+from roc import save_y
 import sys
 import numpy as np
 
@@ -105,7 +106,7 @@ def main():
 
 		model = KerasClassifier(build_fn=ANN,
 		            input_dim = num_features, epochs = EPOCHS, 
-		            batch_size = BATCH_SIZE, verbose=1,activation = "sigmoid")
+		            batch_size = BATCH_SIZE, verbose=1,activation = "relu",optimizer = "Adam")
 		
 
 		param_grid = get_param_grid()
