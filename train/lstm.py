@@ -47,9 +47,9 @@ from pathlib import Path
 
 
 def create_model(look_back=None, input_nodes=None, activation='relu', 
-                optimizer='adam', hidden_layers=1, neurons=400, memcells=600):
+                optimizer='adam', hidden_layers=1, neurons=400, hidden_units=600):
     model = keras.Sequential()
-    model.add(keras.layers.LSTM(memcells, dropout=0.2, 
+    model.add(keras.layers.LSTM(hidden_units, dropout=0.2, 
                                 input_shape=(look_back, input_nodes)))
     
     for _ in range(hidden_layers):
@@ -74,9 +74,9 @@ def get_param_grid():
     elif grid_step == 3:
         neurons = [200, 400, 600]
         hidden_layers = [1, 2]
-        memcells = [200, 400, 600]
+        hidden_units = [200, 400, 600]
         return dict(neurons=neurons, hidden_layers=hidden_layers,
-                    memcells=memcells)
+                    hidden_units=hidden_units)
     else:
         print("Error")
         quit()
@@ -131,20 +131,30 @@ def main():
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = y[train_index], y[test_index]
             model = create_model(look_back=look_back, input_nodes=num_features)
-            model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
+            history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
+                                epochs=epochs, batch_size=batch_size)
             print("----Start Evaluating----")
             _, acc = model.evaluate(X_test, y_test, verbose=0)
             acc_list.append(acc)
             print("Testing Accuracy:", acc)
         print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
-        y_pred = model.predict(X_test)
-        # Store y_pred vector
-        save_y(sys.argv[1], "lstm_y_pred", y_pred)
 
-        # Store y_true vector (Only one script needs this)
-        y_true_file = Path("./model_Ys/true/y_true.npy")
-        if not y_true_file.is_file():
-            save_y("true", "y_true", y_test)
+
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
+        accuracy = history.history['accuracy']
+        val_accuracy = history.history['val_accuracy']
+        return loss, val_loss, accuracy, val_accuracy
+
+        # y_pred = model.predict(X_test)
+
+        # # Store y_pred vector
+        # save_y(sys.argv[1], "lstm_y_pred", y_pred)
+
+        # # Store y_true vector (Only one script needs this)
+        # y_true_file = Path("./model_Ys/true/y_true.npy")
+        # if not y_true_file.is_file():
+        #     save_y("true", "y_true", y_test)
 
 
     else: # doing grid search
