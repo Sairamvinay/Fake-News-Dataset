@@ -12,7 +12,7 @@ from roc import save_y
 import sys
 import numpy as np
 from pathlib import Path
-
+from graphs_neuron_network import graphs_nn
 
 # Usage: 
 # python lstm.py <model> <grid-search step / 0>
@@ -99,30 +99,36 @@ def main():
     if sys.argv[1] == "cv":
         X = CV(X) # train shape: (17973, 10000)
         X, y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
+        look_back = 1
 
     elif sys.argv[1] == 'tfidf':
         X = TFIDF(X) # train shape: (17973, 10000)
         X, y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
+        look_back = 1
 
     elif sys.argv[1] == 'word2vec':
-        X = word2vec(X) # train shape: (17193, 100)
+        X = word2vec(X, lstm=False) # train shape: (17193, 100)
         # X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
+        # look_back = X.shape[1]
+        look_back = 1
 
     else:
         print("Error")
         return
 
-    look_back = 1
-
-    # reshape input to be [samples, time steps, features]
     num_samples = X.shape[0]
-    num_features = X.shape[1]
-    X = np.reshape(np.array(X), (num_samples, look_back, num_features))
+
+    if look_back == 1:
+        # reshape input to be [samples, time steps, features]
+        num_features = X.shape[1]
+        X = np.reshape(np.array(X), (num_samples, look_back, num_features))
+    else:
+        num_features = X.shape[2]
 
     batch_size = 256
 
     if int(sys.argv[2]) == 0: # actual run
-        epochs = 30 # can change this
+        epochs = 5 # can change this
         kf = KFold(n_splits=3, random_state=1)
         acc_list = []
         X_train = None # init
@@ -144,7 +150,7 @@ def main():
         val_loss = history.history['val_loss']
         accuracy = history.history['accuracy']
         val_accuracy = history.history['val_accuracy']
-        return loss, val_loss, accuracy, val_accuracy
+        graphs_nn(loss, val_loss, accuracy, val_accuracy)
 
         # y_pred = model.predict(X_test)
 

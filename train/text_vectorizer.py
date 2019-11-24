@@ -65,6 +65,8 @@ def getVector(model,tokens,size = 100):
 def word2vec(training_text, lstm=False):
     modelTrain = gensim.models.KeyedVectors.load(
             "../fake-news/train_word2vec_model.bin")
+    # modelTrain = gensim.models.KeyedVectors.load(
+    #     "../fake-news/train_word2vec_model_count5.bin")
 
     if lstm is True:
         paras = []
