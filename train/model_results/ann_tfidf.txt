@@ -1,0 +1,22 @@
+Best: 0.946028 using {'activation': 'sigmoid'}
+0.936321 (0.003237) with: {'activation': 'relu'}
+0.927172 (0.001240) with: {'activation': 'linear'}
+0.946028 (0.002842) with: {'activation': 'sigmoid'}
+
+
+Best: 0.947326 using {'optimizer': 'Adam'}
+0.947326 (0.001392) with: {'optimizer': 'Adam'}
+0.573849 (0.003387) with: {'optimizer': 'SGD'}
+
+Best: 0.946708 using {'hidden_layers': 3, 'num_neurons': 400}
+0.945348 (0.002612) with: {'hidden_layers': 1, 'num_neurons': 200}
+0.945348 (0.003541) with: {'hidden_layers': 1, 'num_neurons': 400}
+0.944482 (0.003218) with: {'hidden_layers': 1, 'num_neurons': 600}
+0.945657 (0.003642) with: {'hidden_layers': 2, 'num_neurons': 200}
+0.945904 (0.002867) with: {'hidden_layers': 2, 'num_neurons': 400}
+0.946213 (0.002760) with: {'hidden_layers': 2, 'num_neurons': 600}
+0.945966 (0.003132) with: {'hidden_layers': 3, 'num_neurons': 200}
+0.946708 (0.002132) with: {'hidden_layers': 3, 'num_neurons': 400}
+0.945842 (0.003097) with: {'hidden_layers': 3, 'num_neurons': 600}
+
+
