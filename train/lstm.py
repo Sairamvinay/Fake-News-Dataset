@@ -107,10 +107,10 @@ def main():
         look_back = 1
 
     elif sys.argv[1] == 'word2vec':
-        X = word2vec(X, lstm=False) # train shape: (17193, 100)
+        X = word2vec(X, lstm=True) # train shape: (17193, 100)
         # X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
-        # look_back = X.shape[1]
-        look_back = 1
+        look_back = X.shape[1]
+        # look_back = 1
 
     else:
         print("Error")
@@ -128,11 +128,20 @@ def main():
     batch_size = 256
 
     if int(sys.argv[2]) == 0: # actual run
-        epochs = 5 # can change this
+        epochs = 20 # can change this
         kf = KFold(n_splits=3, random_state=1)
         acc_list = []
         X_train = None # init
         X_test = None # init
+
+        # X_train, X_test, y_train, y_test = train_test_split(
+        #     X, y, test_size=0.33, random_state=42)
+        # model = create_model(look_back=look_back, input_nodes=num_features)
+        # history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
+        #                         epochs=epochs, batch_size=batch_size)
+        # _, acc = model.evaluate(X_test, y_test, verbose=0)
+        # print("Testing Accuracy:", acc)
+
         for train_index, test_index in kf.split(X):
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = y[train_index], y[test_index]

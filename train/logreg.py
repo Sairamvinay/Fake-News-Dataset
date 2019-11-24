@@ -65,7 +65,7 @@ def main():
         y_pred = logistic.predict(X_test)
 
         # Store y_pred vector
-        save_y(sys.argv[1], "lstm_y_pred", y_pred)
+        save_y(sys.argv[1], "logreg_y_pred", y_pred)
 
         # Store y_true vector (Only one script needs this)
         y_true_file = Path("./model_Ys/true/y_true.npy")
