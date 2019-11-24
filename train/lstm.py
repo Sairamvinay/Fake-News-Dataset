@@ -13,6 +13,7 @@ import sys
 import numpy as np
 from pathlib import Path
 
+
 # Usage: 
 # python lstm.py <model> <grid-search step / 0>
 # <model> can be: cv, tfidf, or word2vec
@@ -136,6 +137,7 @@ def main():
             acc_list.append(acc)
             print("Testing Accuracy:", acc)
         print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
+        y_pred = model.predict(X_test)
         # Store y_pred vector
         save_y(sys.argv[1], "lstm_y_pred", y_pred)
 
@@ -143,8 +145,6 @@ def main():
         y_true_file = Path("./model_Ys/true/y_true.npy")
         if not y_true_file.is_file():
             save_y("true", "y_true", y_test)
-        # minor change
-        return acc_list
 
 
     else: # doing grid search

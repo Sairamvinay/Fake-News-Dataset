@@ -67,22 +67,27 @@ def word2vec(training_text, lstm=False):
             "../fake-news/train_word2vec_model.bin")
 
     if lstm is True:
-        paras = np.empty((0, 250, 100), np.float32)
+        paras = []
         for sample in training_text:
-            # clip sample at 250 words
-            sample = sample.split()[:250]
+            # clip sample at 200 words
+            sample = sample.split()
+            sample = sample[:200]
             embeds = np.empty((0, 100), np.float32)
-            for word in sample:
-                try:
-                    # modelTrain[word] is a vector of shape (100, )
-                    embeds = np.vstack((embeds, modelTrain[word]))
-                except KeyError:
+            for i in range(200):
+                if len(sample) <= i:
                     embeds = np.vstack((embeds, np.zeros(100, np.float32)))
+                else:
+                    word = sample[i]
+                    try:
+                        # modelTrain[word] is a vector of shape (100, )
+                        embeds = np.vstack((embeds, modelTrain[word]))
+                    except KeyError:
+                        embeds = np.vstack((embeds, np.zeros(100, np.float32)))
 
             # Now the shape of embeds is (250, 100)
             # stack it into 3-d
-            paras = np.vstack((paras, embeds[np.newaxis, ...]))
-        return paras
+            paras.append(embeds)
+        return np.array(paras)
     else:
         X_train = [getVector(modelTrain,sent.split(' ')) for sent in training_text]
         return np.array(X_train)
