@@ -116,7 +116,7 @@ def main():
         val_loss = history.history['val_loss']
         accuracy = history.history['accuracy']
         val_accuracy = history.history['val_accuracy']
-        graphs_nn(loss, val_loss, accuracy, val_accuracy)
+        # graphs_nn(loss, val_loss, accuracy, val_accuracy)
 		
 		y_pred = model.predict(X_test)
 
