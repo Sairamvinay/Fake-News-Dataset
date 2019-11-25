@@ -97,31 +97,32 @@ def main():
 		kf = KFold(n_splits=3, random_state=1)
 		model = ANN() #need to populate this with best hyperparameters after all Grid search
 		acc_list = []
-        X_train = None # init
-        X_test = None # init
-        for train_index, test_index in kf.split(X):
-            X_train, X_test = X[train_index], X[test_index]
-            y_train, y_test = y[train_index], y[test_index]
-            model = ANN(input_dim = num_features)
-            history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
-                                epochs=EPOCHS, batch_size=BATCH_SIZE)
-            print("----Start Evaluating----")
-            _, acc = model.evaluate(X_test, y_test, verbose=0)
-            acc_list.append(acc)
-            print("Testing Accuracy:", acc)
-        print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
+		X_train = None # init
+		X_test = None # init
+		for train_index, test_index in kf.split(X):
+			X_train, X_test = X[train_index], X[test_index]
+			y_train, y_test = y[train_index], y[test_index]
+			model = ANN(input_dim = num_features)
+			history = model.fit(X_train, y_train, validation_data=(X_test, y_test),epochs=EPOCHS, batch_size=BATCH_SIZE)
+			print("----Start Evaluating----")
+			_, acc = model.evaluate(X_test, y_test, verbose=0)
+			acc_list.append(acc)
+			print("Testing Accuracy:", acc)
 
 
-        loss = history.history['loss']
-        val_loss = history.history['val_loss']
-        accuracy = history.history['accuracy']
-        val_accuracy = history.history['val_accuracy']
+		print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
+
+
+		loss = history.history['loss']
+		val_loss = history.history['val_loss']
+		accuracy = history.history['accuracy']
+		val_accuracy = history.history['val_accuracy']
         # graphs_nn(loss, val_loss, accuracy, val_accuracy)
 		
 		y_pred = model.predict(X_test)
 
         # Store y_pred vector
-        save_y(sys.argv[1], "ann_y_pred", y_pred)
+		save_y(sys.argv[1], "ann_y_pred", y_pred)
 
 
 	else:
