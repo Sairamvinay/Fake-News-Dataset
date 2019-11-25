@@ -133,6 +133,7 @@ def main():
         acc_list = []
         X_train = None # init
         X_test = None # init
+        y_test = None #init
 
         # X_train, X_test, y_train, y_test = train_test_split(
         #     X, y, test_size=0.33, random_state=42)
