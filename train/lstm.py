@@ -108,7 +108,7 @@ def main():
 
     elif sys.argv[1] == 'word2vec':
         X = word2vec(X, lstm=True) # train shape: (17193, 100)
-        # X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
+        X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
         look_back = X.shape[1]
         # look_back = 1
 
