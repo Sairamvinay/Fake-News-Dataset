@@ -1,0 +1,3 @@
+0.932065 (0.006029) with: {'hidden_units': 200}
+0.919713 (0.006362) with: {'hidden_units': 400}
+0.935181 (0.008508) with: {'hidden_units': 600}
