@@ -11,6 +11,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import KFold
 import numpy as np
+from roc import save_y
+from pathlib import Path
 import sys
 
 # Usage: 
@@ -86,7 +88,7 @@ def main():
         # print(confusion_matrix(y_test, y_pred))
 
         # Store y_pred vector
-        save_y(sys.argv[1], "lstm_y_pred", y_pred)
+        save_y(sys.argv[1], "random_forest_y_pred", y_pred)
         # Store y_true vector (Only one script needs this)
         y_true_file = Path("./model_Ys/true/y_true.npy")
         if not y_true_file.is_file():

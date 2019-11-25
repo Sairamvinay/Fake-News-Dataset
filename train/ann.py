@@ -117,6 +117,11 @@ def main():
         accuracy = history.history['accuracy']
         val_accuracy = history.history['val_accuracy']
         graphs_nn(loss, val_loss, accuracy, val_accuracy)
+		
+		y_pred = model.predict(X_test)
+
+        # Store y_pred vector
+        save_y(sys.argv[1], "ann_y_pred", y_pred)
 
 
 	else:
