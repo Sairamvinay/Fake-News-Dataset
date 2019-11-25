@@ -169,7 +169,7 @@ def main():
         # Store y_true vector (Only one script needs this)
         y_true_file = Path("./model_Ys/true/y_true.npy")
         if not y_true_file.is_file():
-            save_y("true", "y_true_" + sys.argv[1], y_test)
+            save_y("true", "y_true_" + sys.argv[1] + ".npy", y_test)
 
 
     else: # doing grid search
