@@ -71,12 +71,12 @@ def get_param_grid():
         optimizer = ['Adam', 'SGD']
         return dict(optimizer=optimizer)
     elif grid_step == 3:
-        # neurons = [200, 400, 600]
-        # hidden_layers = [1, 2]
+        neurons = [200, 400, 600]
+        hidden_layers = [1, 2]
         hidden_units = [200, 400, 600]
-        return dict(hidden_units=hidden_units)
-        # return dict(neurons=neurons, hidden_layers=hidden_layers,
-        #             hidden_units=hidden_units)
+        # return dict(hidden_units=hidden_units) # this is for w2v's gs
+        return dict(neurons=neurons, hidden_layers=hidden_layers,
+                    hidden_units=hidden_units)
     else:
         print("Error")
         quit()
