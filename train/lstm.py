@@ -47,7 +47,7 @@ from graphs_neuron_network import graphs_nn
 
 
 def create_model(look_back=None, input_nodes=None, activation='relu', 
-                optimizer='adam', hidden_layers=1, neurons=400, hidden_units=600):
+                optimizer='adam', hidden_layers=0, neurons=400, hidden_units=600):
     model = keras.Sequential()
     model.add(keras.layers.LSTM(hidden_units, dropout=0.2, 
                                 input_shape=(look_back, input_nodes)))
@@ -72,11 +72,12 @@ def get_param_grid():
         optimizer = ['Adam', 'SGD']
         return dict(optimizer=optimizer)
     elif grid_step == 3:
-        neurons = [200, 400, 600]
-        hidden_layers = [1, 2]
+        # neurons = [200, 400, 600]
+        # hidden_layers = [1, 2]
         hidden_units = [200, 400, 600]
-        return dict(neurons=neurons, hidden_layers=hidden_layers,
-                    hidden_units=hidden_units)
+        return dict(hidden_units=hidden_units)
+        # return dict(neurons=neurons, hidden_layers=hidden_layers,
+        #             hidden_units=hidden_units)
     else:
         print("Error")
         quit()
@@ -161,19 +162,19 @@ def main():
         val_accuracy = history.history['val_accuracy']
         graphs_nn(loss, val_loss, accuracy, val_accuracy)
 
-        # y_pred = model.predict(X_test)
+        y_pred = model.predict(X_test)
 
-        # # Store y_pred vector
-        # save_y(sys.argv[1], "lstm_y_pred", y_pred)
+        # Store y_pred vector
+        save_y(sys.argv[1], "lstm_y_pred", y_pred)
 
-        # # Store y_true vector (Only one script needs this)
-        # y_true_file = Path("./model_Ys/true/y_true.npy")
-        # if not y_true_file.is_file():
-        #     save_y("true", "y_true", y_test)
+        # Store y_true vector (Only one script needs this)
+        y_true_file = Path("./model_Ys/true/y_true.npy")
+        if not y_true_file.is_file():
+            save_y("true", "y_true_" + sys.argv[1], y_test)
 
 
     else: # doing grid search
-        epochs = 25
+        epochs = 20
         model = KerasClassifier(build_fn=create_model, look_back=look_back, 
                     input_nodes=num_features, epochs=epochs, 
                     batch_size=batch_size, verbose=1)

@@ -2,11 +2,15 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve, auc
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+
+# Usage: python roc.py <model-name>
+# <model-name>: cv, tfidf, word2vec
 
 # model_name is either cv, tfidf, or word2vec
-def graph_roc(y_train, model_name):	
+def graph_roc(model_name):	
 	y_scores, algo_names = load_all_y_pred(model_name)
-	y_true = load_y('true', 'y_true')
+	y_true = load_y('true', 'y_true_' + model_name)
 
 	for score, algo_name in zip(y_scores, algo_names):
 		fpr, tpr, _ = roc_curve(y_true, score)
@@ -61,3 +65,18 @@ def load_all_y_pred(model_name):
 	
 	model_names = ['ANN', 'LSTM', 'SVM', 'Random Forest', 'Log Reg']
 	return y_list, model_names
+
+
+def main():
+	if sys.argv[1] == "cv":
+		graph_roc("cv")
+	elif sys.argv[1] == "tfidf":
+		graph_roc("tfidf")
+	elif sys.argv[2] == "word2vec":
+		graph_roc("word2vec")
+	else:
+		print("Error")
+		return
+
+if __name__ == "__main__":
+	main()
