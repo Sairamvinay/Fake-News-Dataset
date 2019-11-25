@@ -14,9 +14,10 @@ import numpy as np
 import sys
 
 # Usage: 
-# 1. python svm.py cv
-# 2. python svm.py tfidf
-# 3. python svm.py word2vec
+# 1. python svm.py cv <flag>
+# 2. python svm.py tfidf <flag>
+# 3. python svm.py word2vec <flag>
+# flag is for the running: 0 for simple K fold and getting graph, and 1 for grid search
 
 
 def evaluate(pred, truth):
