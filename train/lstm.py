@@ -6,7 +6,6 @@ from tensorflow import keras
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 from outlier_remove import removeOutliers, getRemovedVals
-from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold
 from roc import save_y
 import sys
@@ -167,10 +166,10 @@ def main():
         # Store y_pred vector
         save_y(sys.argv[1], "lstm_y_pred", y_pred)
 
-        # Store y_true vector (Only one script needs this)
-        y_true_file = Path("./model_Ys/true/y_true.npy")
-        if not y_true_file.is_file():
-            save_y("true", "y_true_" + sys.argv[1], y_test)
+        # # Store y_true vector (Only one script needs this)
+        # y_true_file = Path("./model_Ys/true/y_true.npy")
+        # if not y_true_file.is_file():
+        #     save_y("true", "y_true_" + sys.argv[1], y_test)
 
 
     else: # doing grid search

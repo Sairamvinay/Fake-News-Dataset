@@ -9,6 +9,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import KFold
 import numpy as np
 import sys
 
@@ -61,20 +62,35 @@ def main():
         min_samples_leaf = 2
         min_samples_split = 5
         n_estimators = 200
+        acc_list = []
+        X_train = None # init
+        X_test = None # init
 
-        model = RandomForestClassifier(max_depth=max_depth, 
-            min_samples_leaf = min_samples_leaf, 
-            min_samples_split=min_samples_split,
-            n_estimators=n_estimators, n_jobs=-1)
-        model.fit(X_train, y_train)
-        #y_pred = model.predict(X_train)
-        # print(confusion_matrix(y_train, y_pred))
-    
-        acc = model.score(X_test, y_test)
-        print("Testing Accuracy:", acc)
+        kf = KFold(n_splits=3, random_state=1)
+
+        for train_index, test_index in kf.split(X):
+            X_train, X_test = X[train_index], X[test_index]
+            y_train, y_test = y[train_index], y[test_index]
+            model = RandomForestClassifier(max_depth=max_depth, 
+                min_samples_leaf = min_samples_leaf, 
+                min_samples_split=min_samples_split,
+                n_estimators=n_estimators, n_jobs=-1)
+            model.fit(X_train, y_train)
+            print("----Start Evaluating----")
+            acc = model.score(X_test, y_test)
+            acc_list.append(acc)
+            print("Testing Accuracy:", acc)
+        print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
 
         y_pred = model.predict(X_test)
         # print(confusion_matrix(y_test, y_pred))
+
+        # Store y_pred vector
+        save_y(sys.argv[1], "lstm_y_pred", y_pred)
+        # Store y_true vector (Only one script needs this)
+        y_true_file = Path("./model_Ys/true/y_true.npy")
+        if not y_true_file.is_file():
+            save_y("true", "y_true_" + sys.argv[1], y_test)
     
     elif int(sys.argv[2]) == 1: # grid search
         # below are the hyperparameters to be grid-searched on
