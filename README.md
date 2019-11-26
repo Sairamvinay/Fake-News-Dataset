@@ -78,9 +78,22 @@ We present that model as our best fake news detector model and we showcase our r
 Phase 4: Related Work
 Should do this side by side
 
-Need to find state of the art papers on the SAME TOPIC and we need to show what’s been done before and what we have done.
+Need to find state of the art papers on the SAME TOPICpython roc.py <model-name>
+python svm.py word2vec <flag>, # flag is for the running: 0 for simple K fold and getting graph, and 1 for grid searchand we need to show what’s been done before and what we have done.
 
 Phase 5: Report Writing
 Due date: Nov. 21
 
 Needs to be in a research paper format. Good formatting with graphs and results.
+
+Instructions to run model code:
+<model> can be: cv, tfidf, or word2vec
+	
+python ann.py <model> <grid-search step / 0>,  <grid-search step> can be: 1, 2, 3, 4 to do a grid search, 0 means actual run
+python logreg.py <model> <flag>,  <flag>: 0 means actual run, 1 means grid search
+python lstm.py <model> <grid-search step / 0>, <grid-search step> can be: 1, 2, 3 to do a grid search, 0 means actual run
+python pca.py <model-name> <flag>, <flag>: 1 to standardize, 0 to not
+python random_forest.py <model> <flag>. <flag>: 0 means actual run, 1 means grid search
+python roc.py <model-name>
+python svm.py word2vec <flag>, flag is for the running: 0 for simple K fold and getting graph, and 1 for grid search
+
