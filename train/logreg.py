@@ -66,12 +66,8 @@ def main():
 
         # Store y_pred vector
         save_y(sys.argv[1], "logreg_y_pred", y_pred)
-
-        # # Store y_true vector (Only one script needs this)
-        # y_true_file = Path("./model_Ys/true/y_true.npy")
-        # if not y_true_file.is_file():
-        #     save_y("true", "y_true", y_test)
-
+        
+        
     else: # grid search
         # creating space for constant C
         c = np.logspace(0, 4, 10)
