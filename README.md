@@ -86,8 +86,8 @@ Due date: Nov. 21
 
 Needs to be in a research paper format. Good formatting with graphs and results.
 
-Instructions to run model code:
-<model> can be: cv, tfidf, or word2vec
+Instructions to run model code: <br/>
+model can be: cv, tfidf, or word2vec
 	
 python ann.py <model> <grid-search step / 0>,  <grid-search step> can be: 1, 2, 3, 4 to do a grid search, 0 means actual run <br/>
 python logreg.py <model> <flag>,  <flag>: 0 means actual run, 1 means grid search <br/>
