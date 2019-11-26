@@ -10,7 +10,7 @@ import itertools
 RNG = np.random.RandomState(42)
 
 def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
-
+    # outlier removals of values
     X = np.array(X)
     index,_ = outlierDetection(X,Ftype)
     if not isTest:
@@ -24,7 +24,7 @@ def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
 
 
 def outlierDetection(Features,Ftype):
-
+    # outlier detection using IsolationForest
     clf_Iso = IsolationForest(random_state=RNG,n_jobs = -1)
     clf_Iso.fit(Features)
     y_Iso_Forest = clf_Iso.predict(Features)
@@ -38,7 +38,7 @@ def outlierDetection(Features,Ftype):
 
 
 def graphOutliers(train,test,x = ["CV","TFIDF","W2V"]):
-	
+    # graph the outlier on cv, tfidf and w2v
 	num_grps = len(x)
 	fig, ax = plt.subplots()
 	x_pos = np.arange(num_grps)
@@ -71,16 +71,16 @@ def main():
     dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
     dfTest = readdata.read_clean_data(readdata.TESTFILEPATH,nolabel = True)
     Y_train = dfTrain["label"].to_numpy()
-    
+
     lines_length = len(dfTrain.values)
     lines_testlength = len(dfTest.values)
-    
+
     trainVal = dfTrain["text"].values
     testVal = dfTest["text"].values
-    
+
     training_text = [trainVal[i] for i in range(lines_length)]
     testing_text = [testVal[i] for i in range(lines_testlength)]
-    
+
     X_train_TFIDF,X_test_TFIDF,_ = TFIDF(training_text,testing_text)
     X_train_CV,X_test_CV,_ = CV(training_text,testing_text)
     X_train_WV,X_test_WV = word2vec(training_text,testing_text)
@@ -102,13 +102,13 @@ def main():
     print("\nFor TFIDF\n")
     print(X_train_TFIDF.shape," is before removal the X_train shape")
     print(X_test_TFIDF.shape," is before removal the X_test shape")
-    
-    
-    
+
+
+
     print("\nFor CV\n")
     print(X_train_CV.shape," is before removal the X_train shape")
     print(X_test_CV.shape," is before removal the X_test shape")
-    
+
 
     result1,perCVtrain = outlierDection(X_train_CV,"CV train")
     result2,perCVtest = outlierDection(X_test_CV,"CV test")
@@ -120,8 +120,8 @@ def main():
     trainOutliers = [perCVtrain,perTFIDFtrain,perWVtrain]
     testOutliers = [perCVtest,perTFIDFtest,perWVtest]
     graphOutliers(trainOutliers,testOutliers)
-    
-    
+
+
     X_train_CV,Y_train_CV = removeOutliers(index = result1,X = X_train_CV,Y = Y_train,Ftype = "CV train")
     X_test_CV = removeOutliers(index = result2,X = X_test_CV,Y = None,Ftype = "CV test")
 
@@ -133,7 +133,7 @@ def main():
     X_test_WV = removeOutliers(index = result6,X = X_test_WV,Y = None,Ftype = "W2V test")
 
 
-    
+
 
     end = time()
     taken = (end - start) / 60.00

@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 import sys
 
-# Usage: 
+# Usage:
 # 1. python svm.py cv <flag>
 # 2. python svm.py tfidf <flag>
 # 3. python svm.py word2vec <flag>
@@ -46,13 +46,13 @@ def main():
     elif sys.argv[1] == 'word2vec':
         X = word2vec(X)
         X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train",isTest = False)
-        
+
     else:
         print("Error")
         return
-    
+
     if int(sys.argv[2]) == 0: # actual run
-        
+        # after k-fold and run support vector machine 
         kf = KFold(n_splits=3, random_state=1)
         svm = SVC(max_iter=500, C=0.25)
         acc_list = []
@@ -65,13 +65,13 @@ def main():
             acc_list.append(acc)
             print("Testing Accuracy:", acc)
         print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
-        
+
         y_pred = svm.predict(X_test)
 
         # Store y_pred vector
         save_y(sys.argv[1], "svm_y_pred", y_pred)
 
-    
+
     else: # grid search
         print("Performing Grid Search on SVM...")
         svm = SVC()
@@ -86,7 +86,7 @@ def main():
 
 
 
-   
+
 
 if __name__ == "__main__":
     main()

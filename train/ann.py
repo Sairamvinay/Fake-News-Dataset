@@ -14,7 +14,7 @@ import sys
 import numpy as np
 from graphs_neuron_network import graphs_nn
 
-# Usage: 
+# Usage:
 # python ann.py <model> <grid-search step / 0>
 # <model> can be: cv, tfidf, or word2vec
 # The last paramter can be 0 or 'grid-search step'
@@ -44,11 +44,11 @@ def get_param_grid():
 
 
 def ANN(input_dim = 10000,num_neurons = 500,activation = "relu",hidden_layers = 3,loss = "binary_crossentropy",optimizer = "Adam",batch_size = BATCH_SIZE,epochs = EPOCHS):
-	
-	
+
+
 	model = keras.models.Sequential()
-	model.add(keras.layers.Dense(num_neurons,input_dim = input_dim,activation = activation))	
-	
+	model.add(keras.layers.Dense(num_neurons,input_dim = input_dim,activation = activation))
+
 	for i in range(hidden_layers):
 
 		model.add(keras.layers.Dense(num_neurons,activation = activation))
@@ -71,22 +71,22 @@ def main():
 	if sys.argv[1] == "cv":
 	    X = CV(X) # train shape: (17973, 10000)
 	    X,y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
-	    
+
 	elif sys.argv[1] == 'tfidf':
 		X = TFIDF(X) # train shape: (17973, 10000)
 		X,y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
-		
-	    
+
+
 	elif sys.argv[1] == 'word2vec':
 		X = word2vec(X)
 		X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train",isTest = False)
-		
-	    
+
+
 	else:
 	    print("Error")
 	    return
 
-	
+
 	num_samples = X.shape[0]
 	num_features = X.shape[1]
 
@@ -118,7 +118,7 @@ def main():
 		accuracy = history.history['accuracy']
 		val_accuracy = history.history['val_accuracy']
         # graphs_nn(loss, val_loss, accuracy, val_accuracy)
-		
+
 		y_pred = model.predict(X_test)
 
         # Store y_pred vector
@@ -128,10 +128,10 @@ def main():
 	else:
 
 		model = KerasClassifier(build_fn=ANN,
-		            input_dim = num_features, epochs = EPOCHS, 
+		            input_dim = num_features, epochs = EPOCHS,
 		            batch_size = BATCH_SIZE, verbose=1,activation = "relu",optimizer = "Adam")
-		
 
+        # grid search on ann hyperparameters
 		param_grid = get_param_grid()
 		grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
 
@@ -147,4 +147,3 @@ def main():
 
 if __name__ == '__main__':
 	main()
-

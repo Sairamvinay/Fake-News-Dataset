@@ -25,7 +25,7 @@ def plot(finaldf, model_name):
     # colors = ['r']
     for label, color in zip(labels, colors):
         indicesToKeep = finaldf['label'] == label
-        ax.scatter(finaldf.loc[indicesToKeep, 'a'], 
+        ax.scatter(finaldf.loc[indicesToKeep, 'a'],
             finaldf.loc[indicesToKeep, 'b'], c=color,s=50)
     ax.legend(labels)
     ax.grid()
@@ -33,6 +33,7 @@ def plot(finaldf, model_name):
 
 
 def main():
+    # PCA feature reduction on cv, tfidf, word2vec
     dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
     X = dfTrain['text'].to_numpy()
     if sys.argv[1] == 'cv':
