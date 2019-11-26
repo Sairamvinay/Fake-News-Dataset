@@ -115,13 +115,12 @@ def main():
 
 		loss = history.history['loss']
 		val_loss = history.history['val_loss']
-		accuracy = history.history['accuracy']
-		val_accuracy = history.history['val_accuracy']
-        # graphs_nn(loss, val_loss, accuracy, val_accuracy)
+		accuracy = history.history['acc']
+		val_accuracy = history.history['val_acc']
 
 		y_pred = model.predict(X_test)
 
-        # Store y_pred vector
+		# Store y_pred vector
 		save_y(sys.argv[1], "ann_y_pred", y_pred)
 
 
@@ -131,7 +130,7 @@ def main():
 		            input_dim = num_features, epochs = EPOCHS,
 		            batch_size = BATCH_SIZE, verbose=1,activation = "relu",optimizer = "Adam")
 
-        # grid search on ann hyperparameters
+        	# grid search on ann hyperparameters
 		param_grid = get_param_grid()
 		grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
 
