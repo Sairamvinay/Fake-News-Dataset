@@ -109,8 +109,8 @@ def main():
     elif sys.argv[1] == 'word2vec':
         X = word2vec(X, lstm=True) # train shape: (17193, 100)
         X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
-        look_back = X.shape[1]
-        # look_back = 1
+        look_back = 1
+        # look_back = X.shape[1] # uncomment to be used for real recurrence
 
     else:
         print("Error")
@@ -128,22 +128,18 @@ def main():
     batch_size = 256
 
     if int(sys.argv[2]) == 0: # actual run
-        epochs = 20 # can change this
+        epochs = 30 # can change this
         kf = KFold(n_splits=3, random_state=1)
         acc_list = []
         X_train = None # init
         X_test = None # init
         y_test = None #init
 
-        # X_train, X_test, y_train, y_test = train_test_split(
-        #     X, y, test_size=0.33, random_state=42)
-        # model = create_model(look_back=look_back, input_nodes=num_features)
-        # history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
-        #                         epochs=epochs, batch_size=batch_size)
-        # _, acc = model.evaluate(X_test, y_test, verbose=0)
-        # print("Testing Accuracy:", acc)
-
+        i = 0
         for train_index, test_index in kf.split(X):
+            if i != 2:
+                i += 1
+                continue
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = y[train_index], y[test_index]
             model = create_model(look_back=look_back, input_nodes=num_features)
@@ -160,7 +156,7 @@ def main():
         val_loss = history.history['val_loss']
         accuracy = history.history['accuracy']
         val_accuracy = history.history['val_accuracy']
-        # graphs_nn(loss, val_loss, accuracy, val_accuracy)
+        graphs_nn(loss, val_loss, accuracy, val_accuracy)
 
         y_pred = model.predict(X_test)
 
@@ -168,7 +164,7 @@ def main():
         save_y(sys.argv[1], "lstm_y_pred", y_pred)
 
         # Store y_true vector (Only one script needs this)
-        y_true_file = Path("./model_Ys/true/y_true.npy")
+        y_true_file = Path("./model_Ys/true/y_true_" + sys.argv[1] + ".npy")
         if not y_true_file.is_file():
             save_y("true", "y_true_" + sys.argv[1] + ".npy", y_test)
 
