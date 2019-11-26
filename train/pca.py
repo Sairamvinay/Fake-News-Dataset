@@ -21,8 +21,6 @@ def plot(finaldf, model_name):
     ax.set_title('2 component PCA for ' + model_name, fontsize = 20)
     labels = [0, 1]
     colors = ['r', 'g']
-    # labels= [0]
-    # colors = ['r']
     for label, color in zip(labels, colors):
         indicesToKeep = finaldf['label'] == label
         ax.scatter(finaldf.loc[indicesToKeep, 'a'],
