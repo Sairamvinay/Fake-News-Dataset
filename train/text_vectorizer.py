@@ -18,11 +18,8 @@ def CV(training_text):
     cv.fit(training_text)
 
     X_train = cv.transform(training_text)
-    # X_test = cv.transform(testing_text)
-    # words = cv.get_feature_names()
 
     X_train = X_train.todense()
-    # X_test = X_test.todense()
     return X_train
 
 
@@ -35,11 +32,7 @@ def TFIDF(training_text):
     tfidf.fit(training_text)
     
     X_train = tfidf.transform(training_text)
-    # X_test = tfidf.transform(testing_text)
-    # words = tfidf.get_feature_names()
-
     X_train = X_train.todense()
-    # X_test = X_test.todense()
 
     return X_train
 
@@ -65,9 +58,6 @@ def getVector(model,tokens,size = 100):
 def word2vec(training_text, lstm=False):
     modelTrain = gensim.models.KeyedVectors.load(
             "../fake-news/train_word2vec_model.bin")
-    # modelTrain = gensim.models.KeyedVectors.load(
-    #     "../fake-news/train_word2vec_model_count5.bin")
-
     if lstm is True:
         paras = []
         for sample in training_text:
