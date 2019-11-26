@@ -19,7 +19,7 @@ def word2Vec(text, data_set):
 
 def word2vecModel(text):
     # # create and train model
-    min_count = sum(len(words) for words in text) / len(text)
+    min_count = sum([len(words) for words in text]) / len(text)
     print(min_count)
     model = Word2Vec(text, min_count=min_count, workers=10)
     # # summarize vocabulary
@@ -54,4 +54,4 @@ def main(argv):
     print(model)
 
 if __name__ == "__main__":
-    main("train_else")
+    main("train")
