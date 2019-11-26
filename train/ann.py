@@ -93,7 +93,6 @@ def main():
 
 
 	if int(sys.argv[2]) == 0:
-		#X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 1, test_size = TEST_RATIO)
 		kf = KFold(n_splits=3, random_state=1)
 		model = ANN() #need to populate this with best hyperparameters after all Grid search
 		acc_list = []
