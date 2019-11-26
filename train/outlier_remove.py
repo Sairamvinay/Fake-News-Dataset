@@ -30,10 +30,7 @@ def outlierDetection(Features,Ftype):
     y_Iso_Forest = clf_Iso.predict(Features)
     result = np.where(y_Iso_Forest == -1)
     result = list(itertools.chain.from_iterable(result))
-    # print(np.shape(result))
-    # print(np.shape(y_Iso_Forest))
     percentOutlier = 100.00 *  np.shape(result)[0]/np.shape(y_Iso_Forest)[0]
-    # print("the percentage of outliers in ",Ftype," is: ",percentOutlier,"%")
     return result,percentOutlier
 
 
@@ -52,13 +49,11 @@ def graphOutliers(train,x = ["CV","TFIDF","W2V"]):
 
 def removeOutliers(index,X,Y = None,Ftype = "CV train"):
     X_removed = np.delete(X,index,axis = 0)
-    # print(X_removed.shape," is shape of X for ", Ftype,"after removing outliers")
     if Y is None:
         return X_removed
 
     else:
         Y_removed = np.delete(Y,index,axis = 0)
-        # print(Y_removed.shape," is shape of Y for ",Ftype," after removing outlier")
         return X_removed,Y_removed
 
 
