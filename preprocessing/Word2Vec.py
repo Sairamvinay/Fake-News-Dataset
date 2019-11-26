@@ -2,40 +2,37 @@ import pandas as pd
 from gensim.models import Word2Vec
 from matplotlib import pyplot
 from sklearn.decomposition import PCA
-
+from fileprocess import read_files
 ### TO USE:
 ############ YOU NEED TO UNCOMMENT A LINE IN word2Vec TO CREATE A NEW MODEL
 ############ YOU NEED TO UNCOMMENT THE CODE AT THE BOTTOM
 
 TRAINFILEPATH = "../fake-news/train_clean.csv"
-TESTFILEPATH = "../fake-news/test_clean.csv"
+save_file = '../fake-news/train_word2vec_model.bin'
 
 def word2Vec(text, data_set):
     if (data_set == "train"):
-        save_file = 'train_word2vec_model.bin'
-    elif (data_set == "test"):
-        save_file = 'test_word2vec_model.bin'
+        save_file = '../fake-news/train_word2vec_model.bin'
     else:
         print("ERROR: word2Vec did not accept args %s %s", text, data_set)
         return
 ############### REMOVE TO CREATE A NEW MODEL ##################
     return Word2Vec.load(save_file)
 ############### REMOVE TO CREATE A NEW MODEL ##################
+
+def word2vecModel(text):
     # # train model
-    # min_count = sum(len(words) for words in text) / len(text)
-
-    # print(min_count)
-    # model = Word2Vec(text, min_count=min_count, workers=10)
-
+    min_count = sum(len(words) for words in text) / len(text)
+    print(min_count)
+    model = Word2Vec(text, min_count=min_count, workers=10)
     # # summarize vocabulary
-    # words = list(model.wv.vocab)
-
+    words = list(model.wv.vocab)
     # # save model
-    # model.save(save_file)
-    
-    # return model
+    model.save(save_file)
+    return model
 
 def graph(model):
+    # Use PCA to reduce features to 2
     X = model[model.wv.vocab]
     pca = PCA(n_components=2)
     result = pca.fit_transform(X)
@@ -47,51 +44,21 @@ def graph(model):
 
     import pandas as pd
 
-def read_files(PATH,nolabel = False, sample=None):
-
-    names = []
-    if nolabel == True:
-        names = ["id","title","author","text"]
-
-    else:
-        names = ["id","title","author","text","label"]
-
-    df = pd.read_csv(PATH,sep = ",",names= names,header = 0)
-    df.dropna(how='any', inplace=True)
-    df.reset_index(drop=True, inplace=True)
-    
-    df["text"] = df['text'].values.astype('U')
-    
-    if sample is None:
-        return df
-    else:
-        return df.sample(n = sample,random_state = 999)
-
-
 def main(argv):
-    if (argv == "train"):
-        file_path = TRAINFILEPATH
-        nolabel = False
-    elif (argv == "test"):
-        file_path = TESTFILEPATH
-        nolabel = True
-    else:
-        print('Please enter "train" or "test"')
-        return
-
+    file_path = TRAINFILEPATH
+    nolabel = False
     df = read_files(file_path,nolabel=nolabel)
-
     lines_length = len(df.values)
     text = [df["text"].values[i].split(" ") for i in range(lines_length)]
-    model = word2Vec(text, argv)
+    if (argv == "train"):
+        model = word2vecModel(text)
+    else:
+        model = word2Vec(text, argv)
     print(model)
 
-
 if __name__ == "__main__":
-    main("train")
+    main("train_else")
 
 ''' UNCOMMET TO RUN '''
 #print("Training")
-#main("train")
-#print("\n\n\nTesting")
-#main("test")
+#main("train_else")

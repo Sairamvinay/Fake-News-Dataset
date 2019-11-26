@@ -11,14 +11,16 @@ import time
 # Usage: to clean test, do <python text_clean.py test>
 
 def remove_stop(data):
+    # remove all stop words using spacy 
     spacy_nlp = spacy.load('en_core_web_sm')
     spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
-    data['text'] = data['text'].apply(lambda x: 
+    data['text'] = data['text'].apply(lambda x:
     ' '.join([token.text for token in spacy_nlp(x) if not token.is_stop]))
     return data
 
 
 def remove_num(data):
+    # remove all digits
     # Credit goes to:
     # https://stackoverflow.com/questions/12851791/
     # removing-numbers-from-string/12851835
@@ -29,6 +31,7 @@ def remove_num(data):
     return data
 
 def remove_punct_noneng(df):
+    # punctuation removals on @, # and all the symbols
     punctuation_remove = string.punctuation
     punctuation_remove = punctuation_remove.replace('@', '')
     punctuation_remove = punctuation_remove.replace('#', '')
@@ -42,7 +45,7 @@ def remove_punct_noneng(df):
 
     for elem in list_to_remove:
         df["text"] = df["text"].str.replace(elem, "")
-    
+
     df["text"] = df["text"].str.lower()
 
     # remove all rows with foreign language characters
@@ -62,24 +65,26 @@ def main():
     start = time.time()
 
     if (len(sys.argv) == 2 and sys.argv[1] == "test"):
-        data = fp.read_files(fp.TESTFILEPATH,nolabel = True,sample = None)  #read in whole file
+         #read in whole file for testing file
+        data = fp.read_files(fp.TESTFILEPATH,nolabel = True,sample = None)
         filename = "test_clean.csv"
-    
+
     else:
-        data = fp.read_files(fp.TRAINFILEPATH,nolabel = False,sample = None)    #read in whole file
+         #read in whole file for training
+        data = fp.read_files(fp.TRAINFILEPATH,nolabel = False,sample = None)
         filename = "train_clean.csv"
-   
+
     print("Doing data cleanup")
-    
+
     data = remove_num(data)
     print("After removing numbers\n")
-    
+
     data = remove_punct_noneng(data)
     print("After removing punctuations\n")
-    
+
     data = remove_stop(data)
     print("After removing Stopwords\n")
-    
+
     data.to_csv(filename, encoding='utf-8', index=False)
 
     end = time.time()

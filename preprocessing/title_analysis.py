@@ -24,7 +24,7 @@ with open("FalseDataFeature_dict.csv", "w", newline="") as f:
     writer = csv.writer(f, delimiter=',')
     for sen in dfFalse['title'].dropna():
         start_time = time.time()
-        #print(sen)
+        # count POS, TAG DEP in dictionary
         doc = nlp(sen)
         for token in doc:
             POS[token.pos_]+=1
