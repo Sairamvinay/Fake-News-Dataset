@@ -3,9 +3,6 @@ from gensim.models import Word2Vec
 from matplotlib import pyplot
 from sklearn.decomposition import PCA
 from fileprocess import read_files
-### TO USE:
-############ YOU NEED TO UNCOMMENT A LINE IN word2Vec TO CREATE A NEW MODEL
-############ YOU NEED TO UNCOMMENT THE CODE AT THE BOTTOM
 
 TRAINFILEPATH = "../fake-news/train_clean.csv"
 save_file = '../fake-news/train_word2vec_model.bin'
@@ -16,12 +13,12 @@ def word2Vec(text, data_set):
     else:
         print("ERROR: word2Vec did not accept args %s %s", text, data_set)
         return
-############### REMOVE TO CREATE A NEW MODEL ##################
+
     return Word2Vec.load(save_file)
-############### REMOVE TO CREATE A NEW MODEL ##################
+
 
 def word2vecModel(text):
-    # # train model
+    # # create and train model
     min_count = sum(len(words) for words in text) / len(text)
     print(min_count)
     model = Word2Vec(text, min_count=min_count, workers=10)
@@ -50,7 +47,7 @@ def main(argv):
     df = read_files(file_path,nolabel=nolabel)
     lines_length = len(df.values)
     text = [df["text"].values[i].split(" ") for i in range(lines_length)]
-    if (argv == "train"):
+    if (argv == "create"):
         model = word2vecModel(text)
     else:
         model = word2Vec(text, argv)
@@ -58,7 +55,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main("train_else")
-
-''' UNCOMMET TO RUN '''
-#print("Training")
-#main("train_else")
