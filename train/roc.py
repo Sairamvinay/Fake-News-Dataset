@@ -16,7 +16,7 @@ def graph_roc(model_name):
 	for score, algo_name in zip(y_scores, algo_names):
 		fpr, tpr, _ = roc_curve(y_true, score)
 		roc_auc = auc(fpr, tpr)
-		label = "ROC curve for %s " % (algo_name)
+		label = "ROC curve for %s and area under curve = %.2f" % (algo_name,roc_auc)
 		plt.plot(fpr, tpr, color=colors[i],
 				lw=2, label=label)
 
