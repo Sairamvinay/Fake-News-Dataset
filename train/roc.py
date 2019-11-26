@@ -11,20 +11,23 @@ import sys
 def graph_roc(model_name):	
 	y_scores, algo_names = load_all_y_pred(model_name)
 	y_true = load_y('true', 'y_true_' + model_name)
-
+	colors = ['red','blue','green','cyan','orange']
+	i = 0
 	for score, algo_name in zip(y_scores, algo_names):
 		fpr, tpr, _ = roc_curve(y_true, score)
 		roc_auc = auc(fpr, tpr)
-		label = "ROC curve for %s (area = %0.2f)" % (algo_name, roc_auc)
-		plt.plot(fpr, tpr, color='darkorange',
+		label = "ROC curve for %s " % (algo_name)
+		plt.plot(fpr, tpr, color=colors[i],
 				lw=2, label=label)
+
+		i += 1
 
 	plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
 	plt.xlim([0.0, 1.0])
 	plt.ylim([0.0, 1.05])
 	plt.xlabel('False Positive Rate')
 	plt.ylabel('True Positive Rate')
-	plt.title('Receiver operating characteristic example')
+	plt.title('Receiver operating characteristic example for %s'%model_name.upper())
 	plt.legend(loc="lower right")
 	plt.show()
 
@@ -72,7 +75,7 @@ def main():
 		graph_roc("cv")
 	elif sys.argv[1] == "tfidf":
 		graph_roc("tfidf")
-	elif sys.argv[2] == "word2vec":
+	elif sys.argv[1] == "word2vec":
 		graph_roc("word2vec")
 	else:
 		print("Error")
