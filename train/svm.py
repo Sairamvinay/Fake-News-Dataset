@@ -54,7 +54,7 @@ def main():
     if int(sys.argv[2]) == 0: # actual run
         # after k-fold and run support vector machine 
         kf = KFold(n_splits=3, random_state=1)
-        svm = SVC(max_iter=500, C=0.25)
+        svm = SVC(C=0.25, kernel='linear')
         acc_list = []
         for train_index, test_index in kf.split(X):
             X_train, X_test = X[train_index], X[test_index]
