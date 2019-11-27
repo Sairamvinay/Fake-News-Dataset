@@ -20,7 +20,7 @@ https://www.kaggle.com/c/fake-news/data
 * Languages: python3
 
 * Libraries: tensorflow, keras, sklearn, numpy, pandas, matplotlib, spacy,
-textblob, gensim, re
+textblob, gensim, re, langid,collections
 
 ## Usage
 
@@ -67,7 +67,8 @@ representations of text are fed into five fine-tuning algorithms.
 Models will be run inside the `train/` folder.
 A general command will be: `python3 <fine-tuning algo> <pre-training> <flag>`
 
-<flag>: can be 0 or other numbers. Other numbers mean performing the 
+
+`<flag>`: can be 0 or other numbers. Other numbers mean performing the 
 grid search. 0 means doing an actual run to get the testing accuracy with
 a k-fold of 3 and with all the best hyperparameters set manually. 
 The best hyperparameters are obtained from grid search.
