@@ -65,7 +65,7 @@ representations of text are fed into five fine-tuning algorithms.
 ### How to run our model
 
 Models will be run inside the `train/` folder.
-A general command will be: python3 <fine-tuning algo> <pre-training> <flag>
+A general command will be: `python3 <fine-tuning algo> <pre-training> <flag>`
 
 <flag>: can be 0 or other numbers. Other numbers mean performing the 
 grid search. 0 means doing an actual run to get the testing accuracy with
