@@ -123,7 +123,7 @@ def graphing(T = "Fake"):
 	plt.title(title)
 	plt.show()
 
-dfTrain = read_files(TRAINFILEPATH,nolabel = False,sample = None)
+dfTrain = read_files(TRAINFILEPATH)
 tag_distr(dfTrain,"Train")
 graphing(T = "Fake")
 graphing(T = "Real")

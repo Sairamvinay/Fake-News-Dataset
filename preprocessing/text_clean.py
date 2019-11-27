@@ -62,7 +62,7 @@ def remove_punct_noneng(df):
 
 def main():
     #read in whole file for training
-    data = fp.read_files(fp.TRAINFILEPATH,nolabel = False,sample = None)
+    data = fp.read_files(fp.TRAINFILEPATH)
     filename = "train_clean.csv"
 
     print("Doing data cleanup")
