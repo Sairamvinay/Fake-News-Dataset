@@ -47,3 +47,5 @@ the percentage of outliers in  W2V_Test  is:  10.013351134846461 %
 0.912890 (0.003271) with: {'C': 10000.0, 'solver': 'sag'}
 0.912952 (0.003218) with: {'C': 10000.0, 'solver': 'lbfgs'}
 0.912952 (0.003218) with: {'C': 10000.0, 'solver': 'liblinear'}
+
+NOTE: best hyperparameters are: solver = 'newton-cg',C = 3593.813663804626; best accuracy = 91.2952%

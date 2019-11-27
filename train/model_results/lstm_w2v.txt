@@ -24,3 +24,6 @@
 0.911097 (0.003275) with: {'neurons': 200, 'memcells': 600, 'hidden_layers': 2}
 0.912890 (0.003037) with: {'neurons': 400, 'memcells': 600, 'hidden_layers': 2}
 0.913323 (0.002280) with: {'neurons': 600, 'memcells': 600, 'hidden_layers': 2}
+
+NOTE: best hyperparameters are: activation = "relu",optimizer = "Adam",neurons = 2, memcells = 200, neurons = 600;
+Accuracy for that model is: 91.5054%

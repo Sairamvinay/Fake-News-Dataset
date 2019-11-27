@@ -15,3 +15,6 @@ Fitting 3 folds for each of 6 candidates, totalling 18 fits
 0.900031 (0.002812) with: {'kernel': 'rbf', 'C': 0.5}
 0.911654 (0.004183) with: {'kernel': 'linear', 'C': 0.75}
 0.904606 (0.002276) with: {'kernel': 'rbf', 'C': 0.75}
+
+
+NOTE: best hyperparameters: {'kernel': 'linear', 'C': 0.75}: accuracy 91.1654%
