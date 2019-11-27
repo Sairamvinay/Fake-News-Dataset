@@ -105,7 +105,7 @@ def main():
 			model = ANN(input_dim = num_features)
 			history = model.fit(X_train, y_train, validation_data=(X_test, y_test),epochs=EPOCHS, batch_size=BATCH_SIZE)
 			print("----Start Evaluating----")
-			_, acc = model.evaluate(X_test, y_test, verbose=0)
+			_, acc = model.evaluate(X_test, y_test, verbose=1)
 			acc_list.append(acc)
 			print("Testing Accuracy:", acc)
 

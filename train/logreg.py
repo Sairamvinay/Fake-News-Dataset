@@ -76,7 +76,7 @@ def main():
         solver = ['newton-cg', 'sag', 'lbfgs', 'liblinear']
         param_grid = dict(C=c, solver=solver)
         logistic = LogisticRegression(max_iter=500)
-        grid = GridSearchCV(logistic, param_grid=param_grid, cv=3, verbose=0)
+        grid = GridSearchCV(logistic, param_grid=param_grid, cv=3, verbose=1)
         grid_result = grid.fit(X, y)
         means = grid_result.cv_results_['mean_test_score']
         stds = grid_result.cv_results_['std_test_score']

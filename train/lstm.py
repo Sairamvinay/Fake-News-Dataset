@@ -131,7 +131,7 @@ def main():
     batch_size = 256
 
     if int(sys.argv[2]) == 0: # actual run
-        epochs = 30 # can change this
+        epochs = 25 # can change this
         kf = KFold(n_splits=3, random_state=1)
         acc_list = []
         X_train = None # init
@@ -146,7 +146,7 @@ def main():
             history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
                                 epochs=epochs, batch_size=batch_size)
             print("----Start Evaluating----")
-            _, acc = model.evaluate(X_test, y_test, verbose=0)
+            _, acc = model.evaluate(X_test, y_test, verbose=1)
             acc_list.append(acc)
             print("Testing Accuracy:", acc)
         print("Mean testing accuracy:", sum(acc_list) / len(acc_list))
