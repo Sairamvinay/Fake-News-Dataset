@@ -43,7 +43,6 @@ def graph(model):
 
 def main(argv):
     file_path = TRAINFILEPATH
-    nolabel = False
     df = read_files(file_path)
     lines_length = len(df.values)
     text = [df["text"].values[i].split(" ") for i in range(lines_length)]
