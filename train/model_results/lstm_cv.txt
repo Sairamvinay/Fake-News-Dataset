@@ -24,4 +24,4 @@
 0.943926 (0.000613) with: {'hidden_layers': 2, 'memcells': 600, 'neurons': 400}
 0.947512 (0.002368) with: {'hidden_layers': 2, 'memcells': 600, 'neurons': 600}
 
-Best: 0.947944 {'activation': 'sigmoid'},  {'optimizer': 'Adam'}, {'hidden_layers': 2, 'memcells': 200, 'neurons': 200}
+Best: Accuracy = 94.7944% {'activation': 'sigmoid'},  {'optimizer': 'Adam'}, {'hidden_layers': 2, 'memcells': 200, 'neurons': 200}
