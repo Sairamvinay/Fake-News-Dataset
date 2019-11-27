@@ -20,7 +20,7 @@ https://www.kaggle.com/c/fake-news/data
 * Languages: python3
 
 * Libraries: tensorflow, keras, sklearn, numpy, pandas, matplotlib, spacy,
-textblob, gensim, re
+textblob, gensim, re, langid
 
 ## Usage
 
