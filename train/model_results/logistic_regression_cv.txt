@@ -51,4 +51,4 @@ the percentage of outliers in  CV_Test  is:  10.013351134846461 %
 0.932303 (0.003068) with: {'C': 10000.0, 'solver': 'lbfgs'}
 0.935765 (0.001090) with: {'C': 10000.0, 'solver': 'liblinear'}
 
-NOTE: best parameters are {'C': 21.544346900318832, 'solver': 'sag'}
+NOTE: best parameters are {'C': 21.544346900318832, 'solver': 'sag'} Accuracy = 94.4606%
