@@ -29,8 +29,8 @@ textblob, gensim, re
 * fake-news: contains our dataset
 
 * preprocessing: contains scripts that we use to preprocess our data (stop
-word removal, puntuation removel, etc.) and to plot the graphs that will be
-useful for our analysis (sentiment analysis, Pos Tags) at the preprocessing
+word removal, punctuation removal, etc.) and to plot the graphs that will be
+useful for our analysis (sentiment analysis, Pos Tags Distribution, Unigrams and Bigrams) at the preprocessing
 stage.
 
 * train: all the pre-training and fine-tuning models are here.
@@ -65,7 +65,7 @@ representations of text are fed into five fine-tuning algorithms.
 ### How to run our model
 
 Models will be run inside the `train/` folder.
-A general command will be: `python3 <fine-tuning algo> <pre-training> <flag>
+A general command will be: python3 <fine-tuning algo> <pre-training> <flag>
 
 <flag>: can be 0 or other numbers. Other numbers mean performing the 
 grid search. 0 means doing an actual run to get the testing accuracy with
