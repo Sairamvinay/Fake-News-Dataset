@@ -98,19 +98,21 @@ def main():
     y= dfTrain['label'].to_numpy()
 
     if sys.argv[1] == "cv":
-        X = CV(X) # train shape: (17973, 10000)
+        X = CV(X)
         X, y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train")
         look_back = 1
 
     elif sys.argv[1] == 'tfidf':
-        X = TFIDF(X) # train shape: (17973, 10000)
+        X = TFIDF(X)
         X, y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train")
         look_back = 1
 
     elif sys.argv[1] == 'word2vec':
-        X = word2vec(X, lstm=True) # train shape: (17193, 100)
+        # if you were to run real recurrence, use lstm=True
+        # And un-comment the below lookback
+        X = word2vec(X, lstm=False)
         X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train")
-        look_back = 1
+        look_back = 1 
         # look_back = X.shape[1] # un-comment to be used for real recurrence
 
     else:
