@@ -47,3 +47,5 @@ the percentage of outliers in  TFIDF_Test  is:  10.013351134846461 %
 0.946028 (0.001711) with: {'C': 10000.0, 'solver': 'sag'}
 0.943555 (0.001830) with: {'C': 10000.0, 'solver': 'lbfgs'}
 0.944049 (0.002371) with: {'C': 10000.0, 'solver': 'liblinear'}
+
+NOTE: best hyperparameters are: solver = 'sag', C = 7.742636826811269; accuracy = 94.7883%
