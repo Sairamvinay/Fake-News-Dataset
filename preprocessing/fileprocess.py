@@ -1,7 +1,6 @@
 import pandas as pd
 
 TRAINFILEPATH = "../fake-news/train_clean.csv"
-TESTFILEPATH = "../fake-news/test_clean.csv"
 
 
 def read_files(PATH,nolabel = False, sample=None):
@@ -30,7 +29,6 @@ def read_files(PATH,nolabel = False, sample=None):
 def main():
 	# load, train and test data 
 	dfTrain = read_files(TRAINFILEPATH,nolabel = False)
-	dfTest = read_files(TESTFILEPATH,nolabel = True)
 
 if __name__ == '__main__':
 	main()

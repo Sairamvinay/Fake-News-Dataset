@@ -99,6 +99,7 @@ def main():
 		X_train = None # init
 		X_test = None # init
 		for train_index, test_index in kf.split(X):
+			# Doing cross validation testing
 			X_train, X_test = X[train_index], X[test_index]
 			y_train, y_test = y[train_index], y[test_index]
 			model = ANN(input_dim = num_features)
@@ -116,6 +117,7 @@ def main():
 		val_loss = history.history['val_loss']
 		accuracy = history.history['acc']
 		val_accuracy = history.history['val_acc']
+		graphs_nn(loss, val_loss, accuracy, val_accuracy)
 
 		y_pred = model.predict(X_test)
 
@@ -129,7 +131,7 @@ def main():
 		            input_dim = num_features, epochs = EPOCHS,
 		            batch_size = BATCH_SIZE, verbose=1,activation = "relu",optimizer = "Adam")
 
-        	# grid search on ann hyperparameters
+        # grid search on ann hyperparameters
 		param_grid = get_param_grid()
 		grid = GridSearchCV(estimator=model, param_grid=param_grid, cv=3)
 

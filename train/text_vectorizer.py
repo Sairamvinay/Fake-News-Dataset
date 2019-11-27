@@ -9,10 +9,8 @@ import numpy as np
 MAX_FEATURES = 10000
 
 
-# '''
-# Parameters: 2 arrays of strings which contain the text of each article within the dataset for train and test
-# Returns: 2 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
-# '''
+# Given samples of training text, for each sample convert it into numerical
+# representations (vectors) using CV
 def CV(training_text):
     cv = CountVectorizer(max_features = MAX_FEATURES)
     cv.fit(training_text)
@@ -23,10 +21,8 @@ def CV(training_text):
     return X_train
 
 
-# '''
-# Parameters: 2 arrays of strings which contain the text of each article within the dataset for train and test
-# Returns: 2 arrays: the feature vector for train, the feature vector for test, words (the features fitted on train)
-# '''
+# Given samples of training text, for each sample convert it into numerical
+# representations (vectors) using TF-IDF
 def TFIDF(training_text):
     tfidf = TfidfVectorizer(max_features = MAX_FEATURES)
     tfidf.fit(training_text)
@@ -37,6 +33,7 @@ def TFIDF(training_text):
     return X_train
 
 
+# Take an average of the word vectors to get a sentence vector
 def getVector(model,tokens,size = 100):
     vec = np.zeros(size)
     count = 0
@@ -55,6 +52,9 @@ def getVector(model,tokens,size = 100):
     return vec
 
 
+
+# Given samples of training text, for each sample convert it into numerical
+# representations (vectors) using Word2Vec
 def word2vec(training_text, lstm=False):
     modelTrain = gensim.models.KeyedVectors.load(
             "../fake-news/train_word2vec_model.bin")

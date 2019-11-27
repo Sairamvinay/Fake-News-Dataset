@@ -64,18 +64,29 @@ representations of text are fed into five fine-tuning algorithms.
 
 ### How to run our model
 
-A general 
+Models will be run inside the `train/` folder.
+A general command will be: `python3 <fine-tuning algo> <pre-training> <flag>
 
+<flag>: can be 0 or other numbers. Other numbers mean performing the 
+grid search. 0 means doing an actual run to get the testing accuracy with
+a k-fold of 3 and with all the best hyperparameters set manually. 
+The best hyperparameters are obtained from grid search.
+The grid search results for each combination of models are available
+in the directory `train/model_results`.
 
+For example, to run logistic regression, give the following command if you
+want to run it with:
+1. CountVectorizer: `python3 logreg.py cv <flag>`
 
-Instructions to run model code: <br/>
-model can be: cv, tfidf, or word2vec
-	
-python ann.py <model> <grid-search step / 0>,  <grid-search step> can be: 1, 2, 3, 4 to do a grid search, 0 means actual run <br/>
-python logreg.py <model> <flag>,  <flag>: 0 means actual run, 1 means grid search <br/>
-python lstm.py <model> <grid-search step / 0>, <grid-search step> can be: 1, 2, 3 to do a grid search, 0 means actual run <br/>
-python pca.py <model-name> <flag>, <flag>: 1 to standardize, 0 to not <br/>
-python random_forest.py <model> <flag>. <flag>: 0 means actual run, 1 means grid search <br/>
-python roc.py <model-name> <br/>
-python svm.py word2vec <flag>, flag is for the running: 0 for simple K fold and getting graph, and 1 for grid search <br/>
+2. TF-IDF: `python3 logreg.py tfidf <flag>`
+
+3. Word2Vec: `python3 logreg.py word2vec <flag>`
+
+Again, <flag> needs to be replaced by numbers. 0 always means an actual run.
+
+For LSTMs and ANNs, grid search is done sequentially rather than all at once
+because of the limitation of computing resource. Thus, the flag for grid search
+not only includes 1, but also 2, 3, and 4. Take a closer look at the comments
+in those two files and you will understand how to perform the grid search.
+
 

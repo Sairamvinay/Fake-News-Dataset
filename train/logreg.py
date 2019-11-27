@@ -52,6 +52,7 @@ def main():
         kf = KFold(n_splits=3, random_state=1)
         logistic = LogisticRegression(max_iter=500, C=C, solver=solver)
         acc_list = []
+        # Doing cross validation testing
         for train_index, test_index in kf.split(X):
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = y[train_index], y[test_index]

@@ -45,6 +45,7 @@ from graphs_neuron_network import graphs_nn
 # 3. search the best hidden layer and hidden neurons and the best memory cells
 
 
+# Create a LSTM network
 def create_model(look_back=None, input_nodes=None, activation='relu', 
                 optimizer='adam', hidden_layers=0, neurons=400, hidden_units=600):
     model = keras.Sequential()
@@ -61,7 +62,7 @@ def create_model(look_back=None, input_nodes=None, activation='relu',
 
 
 
-
+# Get the parameter grid to be used for grid search
 def get_param_grid():
     grid_step = int(sys.argv[2])
     if grid_step == 1:
@@ -74,7 +75,6 @@ def get_param_grid():
         neurons = [200, 400, 600]
         hidden_layers = [1, 2]
         hidden_units = [200, 400, 600]
-        # return dict(hidden_units=hidden_units) # this is for w2v's gs
         return dict(neurons=neurons, hidden_layers=hidden_layers,
                     hidden_units=hidden_units)
     else:
@@ -83,6 +83,7 @@ def get_param_grid():
 
 
 
+# Evaluation of our grid search result
 def evaluate(grid_result):
     means = grid_result.cv_results_['mean_test_score']
     stds = grid_result.cv_results_['std_test_score']
@@ -110,7 +111,7 @@ def main():
         X = word2vec(X, lstm=True) # train shape: (17193, 100)
         X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
         look_back = 1
-        # look_back = X.shape[1] # uncomment to be used for real recurrence
+        # look_back = X.shape[1] # un-comment to be used for real recurrence
 
     else:
         print("Error")
@@ -135,11 +136,8 @@ def main():
         X_test = None # init
         y_test = None #init
 
-        i = 0
+        # Doing cross validation testing
         for train_index, test_index in kf.split(X):
-            if i != 2:
-                i += 1
-                continue
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = y[train_index], y[test_index]
             model = create_model(look_back=look_back, input_nodes=num_features)
@@ -180,8 +178,5 @@ def main():
         grid_result = grid.fit(X, y)
         evaluate(grid_result)  
     
-
-
-
 if __name__ == "__main__":
     main()

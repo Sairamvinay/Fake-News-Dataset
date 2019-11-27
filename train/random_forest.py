@@ -71,6 +71,7 @@ def main():
         kf = KFold(n_splits=3, random_state=1)
 
         for train_index, test_index in kf.split(X):
+            # Doing cross validation testing
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = y[train_index], y[test_index]
             model = RandomForestClassifier(max_depth=max_depth, 

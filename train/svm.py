@@ -85,8 +85,5 @@ def main():
             print("%f (%f) with: %r" % (mean, stdev, param))
 
 
-
-
-
 if __name__ == "__main__":
     main()
