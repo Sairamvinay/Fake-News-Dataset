@@ -9,11 +9,9 @@ NLP = spacy.load("en_core_web_sm")
 def find_rat_type(label):
 
 	if label == 0:
-
 		return "REAL"
 
 	else:
-
 		return "FAKE"
 
 def update_dict(dictn,tags,POS_TAGS):

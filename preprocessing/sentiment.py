@@ -1,10 +1,7 @@
-import fileprocess
+import fileprocess as fp
 from textblob import TextBlob
 from matplotlib import pyplot as plt
 
-
-TRAINFILEPATH = "../fake-news/train.csv"
-TESTFILEPATH = "../fake-news/test.csv"
 
 
 def plt_polarity(dat, category):
@@ -24,7 +21,7 @@ def plt_polarity(dat, category):
 
 def main():
     # plot the sentiment analysis on Fake, real and all news
-    data = fileprocess.read_files(TRAINFILEPATH,nolabel = False)
+    data = fp.read_files(fp.TRAINFILEPATH)
     data['polarity'] = data['text'].map(lambda x: TextBlob(x).sentiment.polarity)
     real = data.loc[data['label'] == 0] # select rows that are real news
     fake = data.loc[data['label'] == 1] # select rows that are real news

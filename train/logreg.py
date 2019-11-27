@@ -20,7 +20,7 @@ from pathlib import Path
 
 
 def main():
-    dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH, nolabel=False)
+    dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH)
 
     X = dfTrain['text'].to_numpy()
     y = dfTrain['label'].to_numpy()

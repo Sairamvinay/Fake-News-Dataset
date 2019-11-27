@@ -9,18 +9,13 @@ import itertools
 
 RNG = np.random.RandomState(42)
 
-def getRemovedVals(X,Y = None,Ftype = "",isTest = False):
-    # outlier removals of values
+# outlier removals of values
+def getRemovedVals(X,Y = None,Ftype = ""):
     X = np.array(X)
+    Y = np.array(Y)
     index,_ = outlierDetection(X,Ftype)
-    if not isTest:
-        Y = np.array(Y)
-        Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
-        return Xrem,Yrem
-
-    else:
-        Xrem = removeOutliers(index,X,Y,Ftype)
-        return Xrem
+    Xrem,Yrem = removeOutliers(index,X,Y,Ftype)
+    return Xrem,Yrem
 
 
 def outlierDetection(Features,Ftype):
@@ -115,6 +110,5 @@ def main():
 
 
 if __name__ == '__main__':
-
     #main()
     pass

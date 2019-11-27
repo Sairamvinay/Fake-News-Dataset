@@ -93,23 +93,23 @@ def evaluate(grid_result):
 
 
 def main():
-    dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
+    dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH)
     X = dfTrain['text'].to_numpy()
     y= dfTrain['label'].to_numpy()
 
     if sys.argv[1] == "cv":
         X = CV(X) # train shape: (17973, 10000)
-        X, y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
+        X, y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train")
         look_back = 1
 
     elif sys.argv[1] == 'tfidf':
         X = TFIDF(X) # train shape: (17973, 10000)
-        X, y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
+        X, y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train")
         look_back = 1
 
     elif sys.argv[1] == 'word2vec':
         X = word2vec(X, lstm=True) # train shape: (17193, 100)
-        X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train",isTest = False)
+        X, y = getRemovedVals(X = X, Y = y, Ftype = "W2V_Train")
         look_back = 1
         # look_back = X.shape[1] # un-comment to be used for real recurrence
 

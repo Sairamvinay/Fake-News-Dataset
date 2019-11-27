@@ -28,24 +28,24 @@ def evaluate(pred, truth):
 
 
 def main():
-    dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH,nolabel = False)
+    dfTrain = readdata.read_clean_data(readdata.TRAINFILEPATH)
 
     X = dfTrain['text'].to_numpy()
     y = dfTrain['label'].to_numpy()
 
     if sys.argv[1] == "cv":
         X = CV(X) # train shape: (17973, 10000)
-        X,y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train")
 
 
     elif sys.argv[1] == 'tfidf':
         X = TFIDF(X) # shape: (17973, 10000)
-        X,y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train")
 
 
     elif sys.argv[1] == 'word2vec':
         X = word2vec(X)
-        X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train",isTest = False)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train")
 
     else:
         print("Error")

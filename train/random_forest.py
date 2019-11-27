@@ -38,17 +38,17 @@ def main():
 
     if sys.argv[1] == "cv":
         X = CV(X) # train shape: (17973, 10000)
-        X,y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train",isTest = False)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "CV_Train")
 
 
     elif sys.argv[1] == 'tfidf':
         X = TFIDF(X) # train shape: (17973, 10000)
-        X,y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train",isTest = False)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "TFIDF_Train")
 
 
     elif sys.argv[1] == 'word2vec':
         X = word2vec(X)
-        X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train",isTest = False)
+        X,y = getRemovedVals(X = X,Y = y,Ftype = "W2V_Train")
         
     else:
         print("Error")

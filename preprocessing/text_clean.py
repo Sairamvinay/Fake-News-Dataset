@@ -6,9 +6,8 @@ import numpy as np
 import string
 import re
 import langid
-import time
+
 # Usage: to clean train, do <python text_clean.py>
-# Usage: to clean test, do <python text_clean.py test>
 
 def remove_stop(data):
     # remove all stop words using spacy 
@@ -62,17 +61,9 @@ def remove_punct_noneng(df):
 
 
 def main():
-    start = time.time()
-
-    if (len(sys.argv) == 2 and sys.argv[1] == "test"):
-         #read in whole file for testing file
-        data = fp.read_files(fp.TESTFILEPATH,nolabel = True,sample = None)
-        filename = "test_clean.csv"
-
-    else:
-         #read in whole file for training
-        data = fp.read_files(fp.TRAINFILEPATH,nolabel = False,sample = None)
-        filename = "train_clean.csv"
+    #read in whole file for training
+    data = fp.read_files(fp.TRAINFILEPATH,nolabel = False,sample = None)
+    filename = "train_clean.csv"
 
     print("Doing data cleanup")
 
@@ -87,9 +78,6 @@ def main():
 
     data.to_csv(filename, encoding='utf-8', index=False)
 
-    end = time.time()
-    taken = (end - start)/60.00
-    print("Time taken is:%f minutes"%taken)
 
 
 if __name__ == "__main__":

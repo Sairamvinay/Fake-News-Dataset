@@ -50,8 +50,7 @@ def main():
 	# Overall Unigram
 	dfTrain = read_files(TRAINFILEPATH,nolabel = False)
 	dfTrain['text'].values.astype('U')
-	dfTest = read_files(TESTFILEPATH,nolabel = True)
-	dfTest['text'].values.astype('U')
+	
     # extract top 20 frequent words as common words
 	common_words = get_top_n_words(dfTrain['text'].values.astype('U'), 20)
 	for word, freq in common_words:
