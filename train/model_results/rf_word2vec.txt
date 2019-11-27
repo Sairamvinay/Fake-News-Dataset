@@ -35,4 +35,4 @@
 0.883709 (0.002268) with: {'max_depth': 9, 'min_samples_leaf': 4, 'min_samples_split': 10, 'n_estimators': 400}
 0.884389 (0.002838) with: {'max_depth': 9, 'min_samples_leaf': 4, 'min_samples_split': 10, 'n_estimators': 800}
 
-Best: 0.885997 using {'max_depth': 9, 'min_samples_leaf': 2, 'min_samples_split': 10, 'n_estimators': 400}
+Best: Accuracy = 88.5997% using {'max_depth': 9, 'min_samples_leaf': 2, 'min_samples_split': 10, 'n_estimators': 400}
